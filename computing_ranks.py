@@ -14,8 +14,8 @@ class Route:
     handholds: int
     groups: list
 
-    def __init__(self, id: int, color: str, handholds: int, groups: list) -> None:
-        self.id = id
+    def __init__(self, route_id: int, color: str, handholds: int, groups: list) -> None:
+        self.id = route_id
         self.color = color
         self.handholds = handholds
         self.groups = groups
