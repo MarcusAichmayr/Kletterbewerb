@@ -10,6 +10,7 @@ GROUPS = ["Mini", "Kinder", "Jugend"]
 
 class Route:
     """describes a climbing route"""
+
     id: int
     color: str
     handholds: int
@@ -22,11 +23,12 @@ class Route:
         self.groups = groups
 
     def __repr__(self) -> str:
-        return "Route %s %s %s (%s)" % (self.id, self.color, self.groups, self.handholds)
+        return f"Route {self.id} {self.color} {self.groups} ({self.handholds})"
 
 
 class Participant:
     """person who climbs routes"""
+
     name: str
     group: str
     rank: int = 0
@@ -39,7 +41,7 @@ class Participant:
         self.points = {}
 
     def __repr__(self) -> str:
-        return "%s(%s)" % (self.name, self.group)
+        return f"{self.name}({self.group})"
 
     def insert_points(self, route_id: int, points: list) -> None:
         """insert how many points the participant has scored for the given route
@@ -53,12 +55,11 @@ class Participant:
             ValueError: if the participant has more than max points
         """
         if self.group not in routes[route_id].groups:
-            raise ValueError("'%s' ist nicht gedacht für '%s'" % (routes[route_id], self))
+            raise ValueError(f"'{routes[route_id]}' ist nicht gedacht für '{self}'")
         for value in points:
             if value > routes[route_id].handholds:
                 raise ValueError(
-                    "'%s' kann nicht %s Griffe bei '%s' haben."
-                    % (self, value, routes[route_id])
+                    f"'{self}' kann nicht {value} Griffe bei '{routes[route_id]}' haben."
                 )
         self.points[route_id] = points
 
@@ -118,8 +119,8 @@ def compute_ranks(participants: list) -> None:
     )
     for participant in participants:
         print(
-            "{:>2}".format(participant.rank),
-            "{:>6.2f}".format(participant.result),
+            f"{participant.rank:>2}",
+            f"{participant.result:>6.2f}",
             ("{:<%s}" % max(len(group) for group in GROUPS)).format(participant.group),
             participant.name,
         )
