@@ -9,6 +9,7 @@ GROUPS = ["Mini", "Kinder", "Jugend"]
 
 
 class Route:
+    """describes a climbing route"""
     id: int
     color: str
     handholds: int
@@ -25,6 +26,7 @@ class Route:
 
 
 class Participant:
+    """person who climbs routes"""
     name: str
     group: str
     rank: int = 0
@@ -40,6 +42,16 @@ class Participant:
         return "%s(%s)" % (self.name, self.group)
 
     def insert_points(self, route_id: int, points: list) -> None:
+        """insert how many points the participant has scored for the given route
+
+        Args:
+            route_id: id of the route
+            points: scored points for each try
+
+        Raises:
+            ValueError: if the participant should not climb this route
+            ValueError: if the participant has more than max points
+        """
         if self.group not in routes[route_id].groups:
             raise ValueError("'%s' ist nicht gedacht für '%s'" % (routes[route_id], self))
         for value in points:
@@ -51,6 +63,11 @@ class Participant:
         self.points[route_id] = points
 
     def compute_result(self) -> float:
+        """computes the total points of the participant
+
+        Returns:
+            total points
+        """
         self.result = sum(
             max(value * weight for value, weight in zip(points, TRY_WEIGHTS))
             / routes[route_id].handholds
@@ -119,7 +136,8 @@ def compute_ranks(participants: list) -> None:
 # for testing
 # assigns random points for participants
 def test_insert_random_points() -> None:
-    import random
+    """ssigns random points for participants"""
+    import random  # pylint: disable=import-outside-toplevel
 
     for participant in participants:
         for route in routes.values():
@@ -137,6 +155,7 @@ compute_ranks(participants)
 # In[]:
 # # for testing if no data is available
 def test_no_data_available() -> None:
+    """for testing if no data is available"""
     wolli = Participant("Wollnashorn", "Mini")
     wolli.insert_points(1, [6, 5, 8])
     wolli.insert_points(2, [15, 13, 15])
@@ -170,7 +189,8 @@ test_no_data_available()
 # for testing
 # generate many participants and assign points randomly
 def test_many_participants() -> None:
-    import random
+    """generate many participants and assign points randomly"""
+    import random  # pylint: disable=import-outside-toplevel
 
     names = [
         "Wollnashorn",
