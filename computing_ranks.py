@@ -1,4 +1,4 @@
-#In[]:
+# In[]:
 import csv
 from scipy.stats import rankdata
 import numpy as np
@@ -29,7 +29,7 @@ class Participant:
     group: str
     rank: int = 0
     points: dict
-    result: float = 0 # a score between 0 and 100
+    result: float = 0  # a score between 0 and 100
 
     def __init__(self, name: str, group: str) -> None:
         self.name = name
@@ -45,33 +45,34 @@ class Participant:
         for value in points:
             if value > routes[route_id].handholds:
                 raise ValueError(
-                        "'%s' kann nicht %s Griffe bei '%s' haben."
-                        % (self, value, routes[route_id])
+                    "'%s' kann nicht %s Griffe bei '%s' haben."
+                    % (self, value, routes[route_id])
                 )
         self.points[route_id] = points
 
     def compute_result(self) -> float:
         self.result = sum(
-                max(value * weight for value, weight in zip(points, TRY_WEIGHTS))
-                /
-                routes[route_id].handholds
-                for route_id, points in self.points.items()
-        ) * 100 / ROUTES_PER_PARTICIPANT
+            max(value * weight for value, weight in zip(points, TRY_WEIGHTS))
+            / routes[route_id].handholds
+            for route_id, points in self.points.items()
+        ) * (100 / ROUTES_PER_PARTICIPANT)
         return self.result
 
 
-with open('data/teilnehmer.csv', 'r') as data:
-    participants = [Participant(child["Name"], child["Gruppe"]) for child in list(csv.DictReader(data))]
+with open("data/teilnehmer.csv", "r") as data:
+    participants = [
+        Participant(child["Name"], child["Gruppe"]) for child in list(csv.DictReader(data))
+    ]
 
-with open('data/routen.csv', 'r') as data:
+with open("data/routen.csv", "r") as data:
     routes = {
-            int(route["ID"]): Route(
-                    int(route["ID"]),
-                    route["Farbe"],
-                    int(route["Anzahl Griffe"]),
-                    [group for group in GROUPS if route[group] == "yes"]
-            )
-            for route in list(csv.DictReader(data))
+        int(route["ID"]): Route(
+            int(route["ID"]),
+            route["Farbe"],
+            int(route["Anzahl Griffe"]),
+            [group for group in GROUPS if route[group] == "yes"],
+        )
+        for route in list(csv.DictReader(data))
     }
 
 ## we can still load the points from a csv file
@@ -90,37 +91,41 @@ def compute_ranks(participants: list) -> None:
         participants_per_group[group] = [p for p in participants if p.group == group]
 
         for participant, rank in zip(
-                participants_per_group[group],
-                rankdata([-p.result for p in participants_per_group[group]], method="dense")
+            participants_per_group[group],
+            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
         ):
             participant.rank = rank
 
-    participants.sort(key=lambda participant: (participant.group, -participant.rank), reverse=True)
+    participants.sort(
+        key=lambda participant: (participant.group, -participant.rank), reverse=True
+    )
     for participant in participants:
         print(
-                "{:>2}".format(participant.rank),
-                "{:>6.2f}".format(participant.result),
-                ("{:<%s}" % max(len(group) for group in GROUPS)).format(participant.group),
-                participant.name
+            "{:>2}".format(participant.rank),
+            "{:>6.2f}".format(participant.result),
+            ("{:<%s}" % max(len(group) for group in GROUPS)).format(participant.group),
+            participant.name,
         )
 
     np.savetxt(
-            "data/ergebnisse.csv",
-            [head] + [[p.name, p.group, p.rank] for p in participants],
-            delimiter=",",
-            fmt="%s"
+        "data/ergebnisse.csv",
+        [head] + [[p.name, p.group, p.rank] for p in participants],
+        delimiter=",",
+        fmt="%s",
     )
+
 
 # In[]:
 # for testing
 # assigns random points for participants
 import random
+
 for participant in participants:
     for route in routes.values():
         if participant.group in route.groups:
-            participant.insert_points(route.id, [
-                    random.randint(0, route.handholds) for _ in range(3)
-            ])
+            participant.insert_points(
+                route.id, [random.randint(0, route.handholds) for _ in range(3)]
+            )
 
 # In[]:
 compute_ranks(participants)
@@ -156,26 +161,26 @@ compute_ranks(participants2)
 # for testing
 # generate many participants and assign points randomly
 names = [
-        "Wollnashorn",
-        "Mammut",
-        "Höhlenbär",
-        "Säbelzahntiger",
-        "Riesenhirsch",
-        "Pferd",
-        "Clementine Simone Nichtsehrweit",
-        "Clementine Simony Nichtsehrlang",
+    "Wollnashorn",
+    "Mammut",
+    "Höhlenbär",
+    "Säbelzahntiger",
+    "Riesenhirsch",
+    "Pferd",
+    "Clementine Simone Nichtsehrweit",
+    "Clementine Simony Nichtsehrlang",
 ]
 participants3 = [
-        Participant(random.choice(names) + str(i), random.choice(GROUPS))
-        for i in range(50)
+    Participant(random.choice(names) + str(i), random.choice(GROUPS)) for i in range(50)
 ]
 import random
+
 for participant in participants3:
     for route in routes.values():
         if participant.group in route.groups:
-            participant.insert_points(route.id, [
-                    random.randint(0, route.handholds) for _ in range(3)
-            ])
+            participant.insert_points(
+                route.id, [random.randint(0, route.handholds) for _ in range(3)]
+            )
 compute_ranks(participants3)
 
 # %%
