@@ -40,7 +40,7 @@ class Participant:
         return "%s(%s)" % (self.name, self.group)
 
     def insert_points(self, route_id: int, points: list) -> None:
-        if not self.group in routes[route_id].groups:
+        if self.group not in routes[route_id].groups:
             raise ValueError("'%s' ist nicht gedacht für '%s'" % (routes[route_id], self))
         for value in points:
             if value > routes[route_id].handholds:
