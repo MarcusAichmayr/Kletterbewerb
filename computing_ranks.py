@@ -77,12 +77,12 @@ class Participant:
         return self.result
 
 
-with open("data/teilnehmer.csv", "r") as data:
+with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
     participants = [
         Participant(child["Name"], child["Gruppe"]) for child in list(csv.DictReader(data))
     ]
 
-with open("data/routen.csv", "r") as data:
+with open("data/routen.csv", "r", encoding="utf-8") as data:
     routes = {
         int(route["ID"]): Route(
             int(route["ID"]),
@@ -94,7 +94,7 @@ with open("data/routen.csv", "r") as data:
     }
 
 ## we can still load the points from a csv file
-# with open('data/punkte.csv', 'r') as data:
+# with open('data/punkte.csv', 'r', encoding="utf-8") as data:
 #     points = list(csv.DictReader(data))
 
 
