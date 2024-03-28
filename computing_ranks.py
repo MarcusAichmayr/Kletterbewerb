@@ -133,6 +133,7 @@ test_insert_random_points()
 # In[]:
 compute_ranks(participants)
 
+
 # In[]:
 # # for testing if no data is available
 def test_no_data_available() -> None:
@@ -161,13 +162,16 @@ def test_no_data_available() -> None:
 
     compute_ranks(participants2)
 
+
 test_no_data_available()
+
 
 # %%
 # for testing
 # generate many participants and assign points randomly
 def test_many_participants() -> None:
     import random
+
     names = [
         "Wollnashorn",
         "Mammut",
@@ -189,6 +193,7 @@ def test_many_participants() -> None:
                     route.id, [random.randint(0, route.handholds) for _ in range(3)]
                 )
     compute_ranks(participants3)
+
 
 test_many_participants()
 
