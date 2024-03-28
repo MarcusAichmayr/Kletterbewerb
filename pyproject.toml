@@ -1,0 +1,25 @@
+[tool.poetry]
+package-mode = false
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10,<3.13"
+scipy = "^1.12.0"
+numpy = "^1.26.4"
+PySide6 = "^6.6.2"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.9.0"
+pylint = "^3.1.0"
+ruff = "^0.3.4"
+pyside6-utils = "^1.2.2"
+
+[tool.mypy]
+disable_error_code = ["import-untyped"]
+
+[tool.ruff]
+line-length = 94
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
