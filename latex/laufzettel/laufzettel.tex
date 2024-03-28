@@ -1,0 +1,74 @@
+\documentclass[a4paper, 12pt]{article}
+
+\input{../include/libs.tex}
+
+\usepackage[
+	top = 9mm,
+	bottom = 9mm,
+	left = 9mm,
+	right = 9mm,
+]{geometry}
+
+\setlength\parindent{0pt}
+\fontdimen2\font=0pt
+\setlength\lineskip{5pt}
+
+\newcolumntype{x}{>{\centering\arraybackslash}p{1.2cm}}
+
+\newcommand{\routen}[1]{
+	\begin{tabular}{|p{4cm}|x|x|x|}
+		\hline
+		Route$\setminus$Versuche & 1 & 2 & 3
+		\DTLforeach[\equal{\gruppe}{yes}]{routen}
+		{
+			\inputID=ID,
+			\inputfarbe=Farbe,
+			\inputanzahl=Anzahl Griffe,
+			\gruppe=#1}
+		{\\\hline \vphantom{\rule{0pt}{1cm}} \inputID{} \textbf{\inputfarbe{}} (\inputanzahl) & & &}
+		\\\hline
+	\end{tabular}
+}
+
+\pgfmathsetmacro{\width}{19}
+\pgfmathsetmacro{\height}{5.4}
+\newcommand{\zettel}[2]
+{\begin{tikzpicture}
+	\draw (0, 0) rectangle (\width, \height);
+	\node[below right, align=left] (bewerb) at (0, \height)
+	{
+		\LARGE Kletterbewerb Toprope - 5. April 2024\\
+		Name:
+		\\[.2cm]
+		\tikz\node[below, right, inner sep=0, text width=10cm] {\Huge #1};
+	};
+	% \node[above right, text width=6cm] at (0, 0) {\Large #1};
+	\node[below left] at (\width, \height) {\itshape#2};
+	\node[above left, inner sep=0] at (\width, 0)
+	{\routen{#2}};
+\end{tikzpicture}
+}
+
+\begin{document}
+
+\pagestyle{empty}
+
+% \raggedright
+\centering
+
+\Large
+
+\DTLloaddb{routen}{../../data/routen.csv}
+\DTLloaddb{teilnehmer}{../../data/teilnehmer.csv}
+
+\DTLforeach{teilnehmer}
+{
+	\inputname=Name,
+	\inputalter=Alter,
+	\inputgruppe=Gruppe}
+{\zettel{\inputname}{\inputgruppe}}
+% \zettel{Ulrike Gurke}{Mini}
+% \zettel{}{Kinder} % Blanko
+% \zettel{}{Jugend} % Blanko
+
+\end{document}

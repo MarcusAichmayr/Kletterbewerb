@@ -1,0 +1,12 @@
+data/
+
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.synctex.gz
+*.pdf
+
+*.ipynb
+*.ods
+

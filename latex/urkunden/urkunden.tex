@@ -1,0 +1,77 @@
+\documentclass[a4paper, 12pt]{article}
+
+\input{../include/libs.tex}
+\usetikzlibrary{decorations, decorations.pathmorphing, decorations.shapes}
+
+\usepackage[none]{hyphenat} % verhindert hyphen (auch bei den Namen der Teilnehmern)
+
+\usepackage[
+	top = 9mm,
+	bottom = 9mm,
+	left = 9mm,
+	right = 9mm,
+]{geometry}
+
+\graphicspath{{../images/}}
+
+\newcommand{\urkunde}[3]{
+	\begin{tikzpicture}[
+		remember picture,
+		overlay,
+		node distance=0em,
+		textstyle/.style={scale=2, align=center}
+	]
+		\node[ % Logo oben rechts
+			anchor=north east,
+			xshift=-.3cm,
+			yshift=-.3cm
+		] at (current page.north east)
+		{\includegraphics[width=16cm]{av_jugend_schwanenstadt.png}};
+		\node at (current page.center) % Logo Mitte
+		{\includegraphics[width=\textwidth]{av_edelweiss.pdf}};
+		\node at (current page.center) % transparentes weißes Rechteck Mitte
+		{\tikz\fill[opacity=.7, white] (0, 0) rectangle (\textwidth, \textwidth);};
+		\node (bewerb) [textstyle] at (current page.center) {\Huge\bfseries Topropeklettern 2024};
+		\node (unterbewerb) [below=of bewerb, textstyle] {des Alpenvereins Schwanenstadt\\in der Gruppe};
+		\node (überbewerb) [above=of bewerb, textstyle] {hat bei der\\Vereinsmeisterschaft im};
+		\node (gruppe) [below=of unterbewerb, textstyle, text depth=0.2em] {\Large\itshape #2};
+		\node (platz) [below=of gruppe, textstyle] {den {\Huge\bfseries #3. Platz} erreicht.};
+		\node (name) [above=of überbewerb, textstyle, yshift=-.5em, text width=.4*\textwidth] {\LARGE\bfseries #1\strut};
+		\node [above=2cm] % Datum Unterschrift unten
+		at (current page.south) {
+			\begin{tikzpicture}
+				\draw (0, 0) -- +(6, 0) node[below, midway] {Datum} node[above, midway] {\Large 5. April 2024};
+				\draw (\textwidth - 2cm, 0) -- +(-6, 0) node[below, midway] {Sportkletterteam};
+			\end{tikzpicture}
+		};
+	\end{tikzpicture}
+	\newpage
+}
+
+\begin{document}
+
+\pagestyle{empty}
+
+%% komisches Rechteck
+% \begin{tikzpicture}[remember picture, overlay]
+% 	\draw[
+% 		line width=.2cm,
+% 		% decorate,
+% 		% decoration=triangles
+% 	] (0, 0) rectangle (.9*\textwidth, -.9*\textheight);
+% \end{tikzpicture}
+
+\DTLloaddb{teilnehmer}{../../data/ergebnisse.csv}
+
+\DTLforeach{teilnehmer}
+{
+	\inputname=Name,
+	\inputgruppe=Gruppe,
+	\inputrang=Rang}
+{
+	\urkunde{\inputname}{\inputgruppe}{\inputrang}
+}
+
+% \urkunde{}{}{\hphantom{10}} % Blanko
+
+\end{document}
