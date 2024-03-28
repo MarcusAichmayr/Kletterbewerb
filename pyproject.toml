@@ -17,6 +17,10 @@ pyside6-utils = "^1.2.2"
 [tool.mypy]
 disable_error_code = ["import-untyped"]
 
+[tool.pylint.MASTER]
+# let pylint run the c-extension to discover variables and modules
+extension-pkg-whitelist = "PySide6"
+
 [tool.ruff]
 line-length = 94
 
