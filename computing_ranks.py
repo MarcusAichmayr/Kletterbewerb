@@ -118,69 +118,78 @@ def compute_ranks(participants: list) -> None:
 # In[]:
 # for testing
 # assigns random points for participants
-import random
+def test_insert_random_points() -> None:
+    import random
 
-for participant in participants:
-    for route in routes.values():
-        if participant.group in route.groups:
-            participant.insert_points(
-                route.id, [random.randint(0, route.handholds) for _ in range(3)]
-            )
+    for participant in participants:
+        for route in routes.values():
+            if participant.group in route.groups:
+                participant.insert_points(
+                    route.id, [random.randint(0, route.handholds) for _ in range(3)]
+                )
 
+
+test_insert_random_points()
 # In[]:
 compute_ranks(participants)
 
 # In[]:
 # # for testing if no data is available
-wolli = Participant("Wollnashorn", "Mini")
-wolli.insert_points(1, [6, 5, 8])
-wolli.insert_points(2, [15, 13, 15])
-wolli.insert_points(5, [8, 5, 8])
-mammi = Participant("Mammut", "Mini")
-mammi.insert_points(1, [0, 3, 2])
-mammi.insert_points(2, [0, 0, 5])
-mammi.insert_points(5, [0, 5, 6])
-tigi = Participant("Säbelzahntiger", "Mini")
-tigi.insert_points(1, [6, 6, 6])
-tigi.insert_points(2, [6, 6, 6])
-tigi.insert_points(5, [6, 6, 6])
-berry = Participant("Höhlenbär", "Mini")
-berry.insert_points(1, [6, 0, 0])
-berry.insert_points(2, [6, 0, 0])
-berry.insert_points(5, [6, 0, 0])
-berry2 = Participant("Höhlenbär", "Kinder")
-berry2.insert_points(2, [6, 0, 0])
-berry2.insert_points(3, [6, 0, 0])
-berry2.insert_points(4, [6, 0, 0])
+def test_no_data_available() -> None:
+    wolli = Participant("Wollnashorn", "Mini")
+    wolli.insert_points(1, [6, 5, 8])
+    wolli.insert_points(2, [15, 13, 15])
+    wolli.insert_points(5, [8, 5, 8])
+    mammi = Participant("Mammut", "Mini")
+    mammi.insert_points(1, [0, 3, 2])
+    mammi.insert_points(2, [0, 0, 5])
+    mammi.insert_points(5, [0, 5, 6])
+    tigi = Participant("Säbelzahntiger", "Mini")
+    tigi.insert_points(1, [6, 6, 6])
+    tigi.insert_points(2, [6, 6, 6])
+    tigi.insert_points(5, [6, 6, 6])
+    berry = Participant("Höhlenbär", "Mini")
+    berry.insert_points(1, [6, 0, 0])
+    berry.insert_points(2, [6, 0, 0])
+    berry.insert_points(5, [6, 0, 0])
+    berry2 = Participant("Höhlenbär", "Kinder")
+    berry2.insert_points(2, [6, 0, 0])
+    berry2.insert_points(3, [6, 0, 0])
+    berry2.insert_points(4, [6, 0, 0])
 
-participants2 = [wolli, mammi, tigi, berry, berry2]
+    participants2 = [wolli, mammi, tigi, berry, berry2]
 
-compute_ranks(participants2)
+    compute_ranks(participants2)
+
+test_no_data_available()
 
 # %%
 # for testing
 # generate many participants and assign points randomly
-names = [
-    "Wollnashorn",
-    "Mammut",
-    "Höhlenbär",
-    "Säbelzahntiger",
-    "Riesenhirsch",
-    "Pferd",
-    "Clementine Simone Nichtsehrweit",
-    "Clementine Simony Nichtsehrlang",
-]
-participants3 = [
-    Participant(random.choice(names) + str(i), random.choice(GROUPS)) for i in range(50)
-]
-import random
+def test_many_participants() -> None:
+    import random
+    names = [
+        "Wollnashorn",
+        "Mammut",
+        "Höhlenbär",
+        "Säbelzahntiger",
+        "Riesenhirsch",
+        "Pferd",
+        "Clementine Simone Nichtsehrweit",
+        "Clementine Simony Nichtsehrlang",
+    ]
+    participants3 = [
+        Participant(random.choice(names) + str(i), random.choice(GROUPS)) for i in range(50)
+    ]
 
-for participant in participants3:
-    for route in routes.values():
-        if participant.group in route.groups:
-            participant.insert_points(
-                route.id, [random.randint(0, route.handholds) for _ in range(3)]
-            )
-compute_ranks(participants3)
+    for participant in participants3:
+        for route in routes.values():
+            if participant.group in route.groups:
+                participant.insert_points(
+                    route.id, [random.randint(0, route.handholds) for _ in range(3)]
+                )
+    compute_ranks(participants3)
+
+test_many_participants()
 
 # %%
