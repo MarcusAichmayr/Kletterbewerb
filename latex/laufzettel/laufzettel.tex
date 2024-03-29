@@ -16,7 +16,7 @@
 \newcolumntype{x}{>{\centering\arraybackslash}p{1.2cm}}
 
 \newcommand{\routen}[1]{
-	\begin{tabular}{|p{4cm}|x|x|x|}
+	\begin{tabular}{@{}|p{5cm}|x|x|x|}
 		\hline
 		Route$\setminus$Versuche & 1 & 2 & 3
 		\DTLforeach[\equal{\gruppe}{yes}]{routen}
@@ -25,7 +25,7 @@
 			\inputfarbe=Farbe,
 			\inputanzahl=Anzahl Griffe,
 			\gruppe=#1}
-		{\\\hline \vphantom{\rule{0pt}{1cm}} \inputID{} \textbf{\inputfarbe{}} (\inputanzahl) & & &}
+		{\\\hline \inputID{} \textbf{\inputfarbe{}} (\inputanzahl) & \vphantom{\rule{0pt}{.9cm}} & &}
 		\\\hline
 	\end{tabular}
 }
@@ -43,7 +43,10 @@
 		\tikz\node[below, right, inner sep=0, text width=10cm] {\Huge #1};
 	};
 	% \node[above right, text width=6cm] at (0, 0) {\Large #1};
-	\node[below left] at (\width, \height) {\itshape#2};
+	\node[below left] at (\width, \height) {
+		\itshape
+		\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}
+	};
 	\node[above left, inner sep=0] at (\width, 0)
 	{\routen{#2}};
 \end{tikzpicture}
@@ -60,6 +63,7 @@
 
 \DTLloaddb{routen}{../../data/routen.csv}
 \DTLloaddb{teilnehmer}{../../data/teilnehmer.csv}
+\DTLloaddb{gruppen}{../../data/gruppen.csv}
 
 \DTLforeach{teilnehmer}
 {

@@ -5,7 +5,11 @@ import numpy as np
 
 ROUTES_PER_PARTICIPANT = 3
 TRY_WEIGHTS = [1, 0.9, 0.8]
-GROUPS = ["Mini", "Kinder", "Jugend"]
+GROUPS = {}
+
+with open('data/gruppen.csv', 'r') as data:
+    for line in csv.DictReader(data):
+        GROUPS[int(line["ID"])] = line["Bezeichnung"]
 
 
 class Route:
@@ -76,7 +80,6 @@ class Participant:
         ) * (100 / ROUTES_PER_PARTICIPANT)
         return self.result
 
-
 with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
     participants = [
         Participant(child["Name"], child["Gruppe"]) for child in list(csv.DictReader(data))
@@ -88,7 +91,7 @@ with open("data/routen.csv", "r", encoding="utf-8") as data:
             int(route["ID"]),
             route["Farbe"],
             int(route["Anzahl Griffe"]),
-            [group for group in GROUPS if route[group] == "yes"],
+            [group_id for group_id in GROUPS if route[str(group_id)] == "yes"],
         )
         for route in list(csv.DictReader(data))
     }
@@ -121,7 +124,7 @@ def compute_ranks(participants: list) -> None:
         print(
             f"{participant.rank:>2}",
             f"{participant.result:>6.2f}",
-            ("{:<%s}" % max(len(group) for group in GROUPS)).format(participant.group),
+            ("{:<%s}" % max(len(group) for group in GROUPS.values())).format(participant.group),
             participant.name,
         )
 
