@@ -23,4 +23,7 @@
     * auf Laufzetteln und Urkunden verwenden
     * Alter und Gruppe der Teilnehmer bestimmen
 
-* [ ] Altersgrenzen für Gruppen einstellen, um Gruppen automatisch zuzuordnen
+* [x] Gruppen IDs auf Gruppennamen in eigener CSV-Datei zuordnen
+  * Latex und Python müssen Daten daraus lesen
+  * Altersgrenzen für Gruppen einstellen, um Gruppen automatisch zuzuordnen?
+    * manuell zuordnen ist flexibler
