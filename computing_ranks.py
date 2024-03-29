@@ -21,6 +21,9 @@ class Group:
     def __repr__(self) -> str:
         return f"'Gruppe {self.id} - {self.name}'"
 
+    def __hash__(self) -> int:
+        return hash(self.id)
+
 
 class Route:
     """describes a climbing route"""
@@ -42,6 +45,9 @@ class Route:
 
     def __repr__(self) -> str:
         return f"'Route {self.id} - {self.color} {[group[self.group_ids].name for group in groups]} ({self.handholds})'"
+
+    def __hash__(self) -> int:
+        return hash(self.id)
 
 
 class Participant:
