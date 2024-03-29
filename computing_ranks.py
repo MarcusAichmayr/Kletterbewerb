@@ -5,47 +5,62 @@ import numpy as np
 
 ROUTES_PER_PARTICIPANT = 3
 TRY_WEIGHTS = [1, 0.9, 0.8]
-GROUPS = {}
 
-with open('data/gruppen.csv', 'r') as data:
-    for line in csv.DictReader(data):
-        GROUPS[int(line["ID"])] = line["Bezeichnung"]
+
+class Group:
+    """an age-based group"""
+    id: int
+    name: str
+
+    def __init__(self, group_id: int, name: str) -> None:
+        if not isinstance(group_id, int):
+            raise TypeError("'group_id' should be an integer")
+        self.id = group_id
+        self.name = name
+
+    def __repr__(self) -> str:
+        return f"'Gruppe {self.id} - {self.name}'"
 
 
 class Route:
     """describes a climbing route"""
-
     id: int
     color: str
     handholds: int
     groups: list
 
-    def __init__(self, route_id: int, color: str, handholds: int, groups: list) -> None:
+    def __init__(self, route_id: int, color: str, handholds: int, group_ids: list) -> None:
+        if not isinstance(route_id, int):
+            raise TypeError("'route_id' should be an integer.")
         self.id = route_id
         self.color = color
         self.handholds = handholds
-        self.groups = groups
+        for group_id in group_ids:
+            if not isinstance(group_id, int):
+                raise TypeError("'group_ids' should be a list of integers.")
+        self.group_ids = group_ids
 
     def __repr__(self) -> str:
-        return f"Route {self.id} {self.color} {self.groups} ({self.handholds})"
+        return f"'Route {self.id} - {self.color} {[group[self.group_ids].name for group in groups]} ({self.handholds})'"
 
 
 class Participant:
     """person who climbs routes"""
-
     name: str
-    group: str
+    group: Group
     rank: int = 0
     points: dict
     result: float = 0  # a score between 0 and 100
 
-    def __init__(self, name: str, group: str) -> None:
+    def __init__(self, name: str, group_id: int) -> None:
+        if not isinstance(group_id, int):
+            raise TypeError("'group_id' should be an integer.")
         self.name = name
-        self.group = group
+        self.group = groups[group_id]
         self.points = {}
 
     def __repr__(self) -> str:
-        return f"{self.name}({self.group})"
+        return f"{self.name}({self.group.name})"
 
     def insert_points(self, route_id: int, points: list) -> None:
         """insert how many points the participant has scored for the given route
@@ -58,7 +73,7 @@ class Participant:
             ValueError: if the participant should not climb this route
             ValueError: if the participant has more than max points
         """
-        if self.group not in routes[route_id].groups:
+        if self.group.id not in routes[route_id].group_ids:
             raise ValueError(f"'{routes[route_id]}' ist nicht gedacht für '{self}'")
         for value in points:
             if value > routes[route_id].handholds:
@@ -80,21 +95,28 @@ class Participant:
         ) * (100 / ROUTES_PER_PARTICIPANT)
         return self.result
 
+with open('data/gruppen.csv', 'r', encoding="utf-8") as data:
+    groups = {
+        int(line["ID"]): Group(int(line["ID"]), line["Bezeichnung"])
+        for line in csv.DictReader(data)
+    }
+
 with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
     participants = [
-        Participant(child["Name"], child["Gruppe"]) for child in list(csv.DictReader(data))
+        Participant(child["Name"], int(child["Gruppe"])) for child in list(csv.DictReader(data))
     ]
 
 with open("data/routen.csv", "r", encoding="utf-8") as data:
     routes = {
-        int(route["ID"]): Route(
-            int(route["ID"]),
-            route["Farbe"],
-            int(route["Anzahl Griffe"]),
-            [group_id for group_id in GROUPS if route[str(group_id)] == "yes"],
+        int(line["ID"]): Route(
+            int(line["ID"]),
+            line["Farbe"],
+            int(line["Anzahl Griffe"]),
+            [group.id for group in list(groups.values()) if line[str(group.id)] == "yes"],
         )
-        for route in list(csv.DictReader(data))
+        for line in list(csv.DictReader(data))
     }
+
 
 ## we can still load the points from a csv file
 # with open('data/punkte.csv', 'r', encoding="utf-8") as data:
@@ -108,29 +130,29 @@ def compute_ranks(participants: list) -> None:
 
     participants_per_group = {}
     head = ["Name", "Gruppe", "Rang"]
-    for group in GROUPS:
-        participants_per_group[group] = [p for p in participants if p.group == group]
+    for group_id in list(groups.keys()):
+        participants_per_group[group_id] = [p for p in participants if p.group.id == group_id]
 
         for participant, rank in zip(
-            participants_per_group[group],
-            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
+            participants_per_group[group_id],
+            rankdata([-p.result for p in participants_per_group[group_id]], method="dense"),
         ):
             participant.rank = rank
 
     participants.sort(
-        key=lambda participant: (participant.group, -participant.rank), reverse=True
+        key=lambda participant: (participant.group.id, -participant.rank), reverse=True
     )
     for participant in participants:
         print(
             f"{participant.rank:>2}",
             f"{participant.result:>6.2f}",
-            ("{:<%s}" % max(len(group) for group in GROUPS.values())).format(participant.group),
+            ("{:<%s}" % max(len(group.name) for group in list(groups.values()))).format(participant.group.name),
             participant.name,
         )
 
     np.savetxt(
         "data/ergebnisse.csv",
-        [head] + [[p.name, p.group, p.rank] for p in participants],
+        [head] + [[p.name, p.group.name, p.rank] for p in participants],
         delimiter=",",
         fmt="%s",
     )
@@ -145,7 +167,7 @@ def test_insert_random_points() -> None:
 
     for participant in participants:
         for route in routes.values():
-            if participant.group in route.groups:
+            if participant.group.id in route.group_ids:
                 participant.insert_points(
                     route.id, [random.randint(0, route.handholds) for _ in range(3)]
                 )
@@ -154,40 +176,6 @@ def test_insert_random_points() -> None:
 test_insert_random_points()
 # In[]:
 compute_ranks(participants)
-
-
-# In[]:
-# # for testing if no data is available
-def test_no_data_available() -> None:
-    """for testing if no data is available"""
-    wolli = Participant("Wollnashorn", "Mini")
-    wolli.insert_points(1, [6, 5, 8])
-    wolli.insert_points(2, [15, 13, 15])
-    wolli.insert_points(5, [8, 5, 8])
-    mammi = Participant("Mammut", "Mini")
-    mammi.insert_points(1, [0, 3, 2])
-    mammi.insert_points(2, [0, 0, 5])
-    mammi.insert_points(5, [0, 5, 6])
-    tigi = Participant("Säbelzahntiger", "Mini")
-    tigi.insert_points(1, [6, 6, 6])
-    tigi.insert_points(2, [6, 6, 6])
-    tigi.insert_points(5, [6, 6, 6])
-    berry = Participant("Höhlenbär", "Mini")
-    berry.insert_points(1, [6, 0, 0])
-    berry.insert_points(2, [6, 0, 0])
-    berry.insert_points(5, [6, 0, 0])
-    berry2 = Participant("Höhlenbär", "Kinder")
-    berry2.insert_points(2, [6, 0, 0])
-    berry2.insert_points(3, [6, 0, 0])
-    berry2.insert_points(4, [6, 0, 0])
-
-    participants2 = [wolli, mammi, tigi, berry, berry2]
-
-    compute_ranks(participants2)
-
-
-test_no_data_available()
-
 
 # %%
 # for testing
@@ -207,12 +195,12 @@ def test_many_participants() -> None:
         "Clementine Simony Nichtsehrlang",
     ]
     participants3 = [
-        Participant(random.choice(names) + str(i), random.choice(GROUPS)) for i in range(50)
+        Participant(random.choice(names) + str(i), random.choice(list(groups.keys()))) for i in range(50)
     ]
 
     for participant in participants3:
         for route in routes.values():
-            if participant.group in route.groups:
+            if participant.group.id in route.group_ids:
                 participant.insert_points(
                     route.id, [random.randint(0, route.handholds) for _ in range(3)]
                 )
@@ -221,4 +209,33 @@ def test_many_participants() -> None:
 
 test_many_participants()
 
-# %%
+# In[]:
+# def test_no_data_available() -> None:
+#     """for testing if no data is available"""
+#     wolli = Participant("Wollnashorn", "Mini")
+#     wolli.insert_points(1, [6, 5, 8])
+#     wolli.insert_points(2, [15, 13, 15])
+#     wolli.insert_points(5, [8, 5, 8])
+#     mammi = Participant("Mammut", "Mini")
+#     mammi.insert_points(1, [0, 3, 2])
+#     mammi.insert_points(2, [0, 0, 5])
+#     mammi.insert_points(5, [0, 5, 6])
+#     tigi = Participant("Säbelzahntiger", "Mini")
+#     tigi.insert_points(1, [6, 6, 6])
+#     tigi.insert_points(2, [6, 6, 6])
+#     tigi.insert_points(5, [6, 6, 6])
+#     berry = Participant("Höhlenbär", "Mini")
+#     berry.insert_points(1, [6, 0, 0])
+#     berry.insert_points(2, [6, 0, 0])
+#     berry.insert_points(5, [6, 0, 0])
+#     berry2 = Participant("Höhlenbär", "Kinder")
+#     berry2.insert_points(2, [6, 0, 0])
+#     berry2.insert_points(3, [6, 0, 0])
+#     berry2.insert_points(4, [6, 0, 0])
+
+#     participants2 = [wolli, mammi, tigi, berry, berry2]
+
+#     compute_ranks(participants2)
+
+
+# test_no_data_available()
