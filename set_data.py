@@ -21,7 +21,6 @@ def compute_ranks(participants: list) -> None:
         participant.compute_result()
 
     participants_per_group = {}
-    head = ["Name", "Gruppe", "Rang"]
     for group in groups:
         participants_per_group[group] = [p for p in participants if p.group == group]
 
@@ -42,6 +41,7 @@ def compute_ranks(participants: list) -> None:
             participant.name,
         )
 
+    head = ["Name", "Gruppe", "Rang"]
     savetxt(
         GENERATED_DIR +"ergebnisse.csv",
         [head] + [[p.name, p.group.name, p.rank] for p in participants],
@@ -61,6 +61,7 @@ with open(DATA_DIR + "routen.csv", "r", encoding="utf-8") as data:
             line["Farbe"],
             int(line["Anzahl Griffe"]),
             [group for group in groups if line[str(group.id)] == "yes"],
+            line["Routensetzer"],
         )
         for line in list(csv.DictReader(data))
     ]
@@ -69,3 +70,20 @@ for group in groups:
 
 with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
     participants = [Participant(line["Name"], group_dict[int(line["Gruppe"])]) for line in csv.DictReader(data)]
+
+def set_route_data() -> None:
+    head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
+    savetxt(
+        GENERATED_DIR +"routen.csv",
+        [head] + [[
+            route.id,
+            route.color,
+            route.creator,
+            "/".join(group.name for group in route.groups),
+        ] for route in routes],
+        delimiter=",",
+        fmt="%s",
+    )
+    print("Setting route data.")
+
+set_route_data()

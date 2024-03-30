@@ -36,8 +36,9 @@ class Route:
     color: str
     handholds: int
     groups: list
+    creator: str
 
-    def __init__(self, route_id: int, color: str, handholds: int, groups: list) -> None:
+    def __init__(self, route_id: int, color: str, handholds: int, groups: list, creator: str) -> None:
         if not isinstance(route_id, int):
             raise TypeError("'route_id' should be an integer.")
         self.id = route_id
@@ -47,6 +48,7 @@ class Route:
             if not isinstance(group, Group):
                 raise TypeError("'groups' should be a list of 'Group' objects.")
         self.groups = groups.copy()
+        self.creator = creator
 
     def __repr__(self) -> str:
         return f"Route{self.id}"
