@@ -1,0 +1,48 @@
+\documentclass[a4paper, 10pt]{article}
+
+\input{../include/libs.tex}
+
+\usepackage[
+	top = 8mm,
+	bottom = 9mm,
+	left = 21mm,
+	right = 9mm
+]{geometry}
+
+\setlength\parindent{0pt}
+% \fontdimen2\font=0pt
+\setlength\lineskip{13mm}
+
+\begin{document}
+
+\pagestyle{empty}
+
+\raggedright
+
+% \large
+
+\pgfmathsetmacro{\width}{5}
+\pgfmathsetmacro{\height}{2}
+
+\DTLloaddb{gruppen}{../../data/gruppen.csv}
+\DTLforeach{gruppen}{\inputgruppe=Bezeichnung}
+{
+	\begin{tikzpicture}
+		\draw (0, 0) rectangle (\width, \height);
+		\node[align=center] at (.5*\width, .5*\height) {
+			\textbf{1. Platz}
+			\\
+			Topropeklettern 2024
+			\\
+			OeAV Sektion Schwanenstadt
+			\\
+			Gruppe:
+			\textit{\inputgruppe}
+		};
+		\node[below left] at (\width, \height) % Logo
+		{\includegraphics[width=.7cm]{av_edelweiss.pdf}};
+	\end{tikzpicture}
+	\hspace{9mm}
+}
+
+\end{document}
