@@ -1,4 +1,3 @@
-# In[]:
 import csv
 from scipy.stats import rankdata
 import numpy as np
@@ -104,32 +103,6 @@ class Participant:
         ) * (100 / ROUTES_PER_PARTICIPANT)
         return self.result
 
-with open('data/gruppen.csv', 'r', encoding="utf-8") as data:
-    groups = [
-        Group(int(line["ID"]), line["Bezeichnung"])
-        for line in csv.DictReader(data)
-    ]
-    group_dict = {group.id: group for group in groups}
-
-with open("data/routen.csv", "r", encoding="utf-8") as data:
-    routes = [
-        Route(
-            int(line["ID"]),
-            line["Farbe"],
-            int(line["Anzahl Griffe"]),
-            [group for group in groups if line[str(group.id)] == "yes"],
-        )
-        for line in list(csv.DictReader(data))
-    ]
-
-with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [
-        Participant(
-            line["Name"],
-            group_dict[int(line["Gruppe"])]
-        ) for line in csv.DictReader(data)
-    ]
-
 
 def compute_ranks(participants: list) -> None:
     """Compute ranks of participants and save results (sorted) in 'data/ergebnisse.csv'."""
@@ -165,84 +138,30 @@ def compute_ranks(participants: list) -> None:
         fmt="%s",
     )
 
-
-# In[]:
-# for testing
-# assigns random points for participants
-def test_insert_random_points() -> None:
-    """assigns random points for participants"""
-    import random  # pylint: disable=import-outside-toplevel
-
-    for participant in participants:
-        for route in participant.points:
-            participant.insert_points(
-                route, [random.randint(0, route.handholds) for _ in range(3)]
-            )
-
-
-test_insert_random_points()
-# In[]:
-compute_ranks(participants)
-
-# %%
-# for testing
-# generate many participants and assign points randomly
-def test_many_participants() -> None:
-    """generate many participants and assign points randomly"""
-    import random  # pylint: disable=import-outside-toplevel
-
-    names = [
-        "Wollnashorn",
-        "Mammut",
-        "Höhlenbär",
-        "Säbelzahntiger",
-        "Riesenhirsch",
-        "Pferd",
-        "Clementine Simone Nichtsehrweit",
-        "Clementine Simony Nichtsehrlang",
+# load data
+# where should this be?
+with open('data/gruppen.csv', 'r', encoding="utf-8") as data:
+    groups = [
+        Group(int(line["ID"]), line["Bezeichnung"])
+        for line in csv.DictReader(data)
     ]
-    participants3 = [
-        Participant(random.choice(names) + str(i), random.choice(groups)) for i in range(50)
+    group_dict = {group.id: group for group in groups}
+
+with open("data/routen.csv", "r", encoding="utf-8") as data:
+    routes = [
+        Route(
+            int(line["ID"]),
+            line["Farbe"],
+            int(line["Anzahl Griffe"]),
+            [group for group in groups if line[str(group.id)] == "yes"],
+        )
+        for line in list(csv.DictReader(data))
     ]
 
-    for participant in participants3:
-        for route in participant.points:
-            participant.insert_points(
-                route, [random.randint(0, route.handholds) for _ in range(3)]
-            )
-
-    compute_ranks(participants3)
-
-
-test_many_participants()
-
-# In[]:
-# def test_no_data_available() -> None:
-#     """for testing if no data is available"""
-#     wolli = Participant("Wollnashorn", "Mini")
-#     wolli.insert_points(1, [6, 5, 8])
-#     wolli.insert_points(2, [15, 13, 15])
-#     wolli.insert_points(5, [8, 5, 8])
-#     mammi = Participant("Mammut", "Mini")
-#     mammi.insert_points(1, [0, 3, 2])
-#     mammi.insert_points(2, [0, 0, 5])
-#     mammi.insert_points(5, [0, 5, 6])
-#     tigi = Participant("Säbelzahntiger", "Mini")
-#     tigi.insert_points(1, [6, 6, 6])
-#     tigi.insert_points(2, [6, 6, 6])
-#     tigi.insert_points(5, [6, 6, 6])
-#     berry = Participant("Höhlenbär", "Mini")
-#     berry.insert_points(1, [6, 0, 0])
-#     berry.insert_points(2, [6, 0, 0])
-#     berry.insert_points(5, [6, 0, 0])
-#     berry2 = Participant("Höhlenbär", "Kinder")
-#     berry2.insert_points(2, [6, 0, 0])
-#     berry2.insert_points(3, [6, 0, 0])
-#     berry2.insert_points(4, [6, 0, 0])
-
-#     participants2 = [wolli, mammi, tigi, berry, berry2]
-
-#     compute_ranks(participants2)
-
-
-# test_no_data_available()
+with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
+    participants = [
+        Participant(
+            line["Name"],
+            group_dict[int(line["Gruppe"])]
+        ) for line in csv.DictReader(data)
+    ]
