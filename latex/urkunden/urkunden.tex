@@ -17,28 +17,25 @@
 		remember picture,
 		overlay,
 		node distance=0em,
-		textstyle/.style={scale=2, align=center}
+		textstyle/.style={scale=2},
+		align=center,
 	]
-		\node[ % Logo oben rechts
-			anchor=north east,
-			xshift=-.3cm,
-			yshift=-.3cm
-		] at (current page.north east)
-		{\includegraphics[width=16cm]{av_jugend_schwanenstadt.png}};
-		\node at (current page.center) % Logo Mitte
-		{\includegraphics[width=\textwidth]{av_edelweiss.pdf}};
-		\node at (current page.center) % transparentes weißes Rechteck Mitte
-		{\tikz\fill[opacity=.7, white] (0, 0) rectangle (\textwidth, \textwidth);};
-		\node (bewerb) [textstyle] at (current page.center) {\Huge\bfseries Topropeklettern 2024};
-		\node (unterbewerb) [below=of bewerb, textstyle] {des Alpenvereins Schwanenstadt\\in der Gruppe};
-		\node (überbewerb) [above=of bewerb, textstyle] {hat bei der\\Vereinsmeisterschaft im};
-		\node (gruppe) [below=of unterbewerb, textstyle, text depth=0.2em] {\Large\itshape #2};
-		\node (Rang) [below=of gruppe, textstyle] {den {\Huge\bfseries #3. Rang} erreicht.};
-		\node (name) [above=of überbewerb, textstyle, yshift=-.5em, text width=.4*\textwidth] {\LARGE\bfseries #1\strut};
-		\node [above=2cm] % Datum Unterschrift unten
-		at (current page.south) {
+		% Logo oben rechts
+		\node[anchor=north east, xshift=-.3cm, yshift=-.3cm] at (current page.north east) {\includegraphics[width=16cm]{av_jugend_schwanenstadt.png}};
+		% Logo Mitte
+		\node at (current page.center) {\includegraphics[width=\textwidth]{av_edelweiss.pdf}};
+		% transparentes weißes Rechteck Mitte
+		\node at (current page.center) {\tikz\fill[opacity=.7, white] (0, 0) rectangle (\textwidth, \textwidth);};
+		\node (Bewerb) [textstyle, font=\huge\bfseries] at (current page.center) {Topropeklettern 2024};
+		\node (Text2) [below=of Bewerb, textstyle] {des Alpenvereins Schwanenstadt\\in der Gruppe};
+		\node (Text1) [above=of Bewerb, textstyle] {hat bei der\\Vereinsmeisterschaft im};
+		\node (Gruppe) [below=of Text2, textstyle, text depth=0.2em] {\Large\itshape #2};
+		\node (Rang) [below=of Gruppe, textstyle] {den {\huge\bfseries #3. Rang} erreicht.};
+		\node (Name) [above=of Text1, textstyle, font=\LARGE\bfseries, yshift=-.5em, text width=.4*\textwidth] {#1\strut};
+		% Datum Unterschrift unten
+		\node [above=2cm] at (current page.south) {
 			\begin{tikzpicture}
-				\draw (0, 0) -- +(6, 0) node[below, midway] {Datum} node[above, midway] {\Large 5. April 2024};
+				\draw (0, 0) -- +(6, 0) node[below, midway] {Datum} node[above, midway, text depth=0pt] {\Large 5. April 2024};
 				\draw (\textwidth - 2cm, 0) -- +(-6, 0) node[below, midway] {Sportkletterteam};
 			\end{tikzpicture}
 		};
