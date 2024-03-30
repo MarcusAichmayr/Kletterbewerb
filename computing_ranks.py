@@ -32,19 +32,19 @@ class Route:
     handholds: int
     groups: list
 
-    def __init__(self, route_id: int, color: str, handholds: int, group_ids: list) -> None:
+    def __init__(self, route_id: int, color: str, handholds: int, groups: list) -> None:
         if not isinstance(route_id, int):
             raise TypeError("'route_id' should be an integer.")
         self.id = route_id
         self.color = color
         self.handholds = handholds
-        for group_id in group_ids:
-            if not isinstance(group_id, int):
-                raise TypeError("'group_ids' should be a list of integers.")
-        self.group_ids = group_ids
+        for group in groups:
+            if not isinstance(group, Group):
+                raise TypeError("'groups' should be a list of 'Group' objects.")
+        self.groups = groups.copy()
 
     def __repr__(self) -> str:
-        return f"'Route {self.id} - {self.color} {[group[self.group_ids].name for group in groups]} ({self.handholds})'"
+        return f"'Route {self.id} - {self.color} {[group.name for group in self.groups]} ({self.handholds})'"
 
     def __hash__(self) -> int:
         return hash(self.id)
@@ -58,17 +58,20 @@ class Participant:
     points: dict
     result: float = 0  # a score between 0 and 100
 
-    def __init__(self, name: str, group_id: int) -> None:
-        if not isinstance(group_id, int):
-            raise TypeError("'group_id' should be an integer.")
+    def __init__(self, name: str, group: Group) -> None:
+        if not isinstance(group, Group):
+            raise TypeError("'group' should be a Group object.")
         self.name = name
-        self.group = groups[group_id]
-        self.points = {}
+        self.group = group
+        self.points = {
+            route: 0
+            for route in routes if self.group in route.groups
+        }
 
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
 
-    def insert_points(self, route_id: int, points: list) -> None:
+    def insert_points(self, route: int, points: list) -> None:
         """insert how many points the participant has scored for the given route
 
         Args:
@@ -79,14 +82,14 @@ class Participant:
             ValueError: if the participant should not climb this route
             ValueError: if the participant has more than max points
         """
-        if self.group.id not in routes[route_id].group_ids:
-            raise ValueError(f"'{routes[route_id]}' ist nicht gedacht für '{self}'")
+        if self.group not in route.groups:
+            raise ValueError(f"'{route}' ist nicht gedacht für '{self}'")
         for value in points:
-            if value > routes[route_id].handholds:
+            if value > route.handholds:
                 raise ValueError(
-                    f"'{self}' kann nicht {value} Griffe bei '{routes[route_id]}' haben."
+                    f"'{self}' kann nicht {value} Griffe bei '{route}' haben."
                 )
-        self.points[route_id] = points
+        self.points[route] = points
 
     def compute_result(self) -> float:
         """computes the total points of the participant
@@ -96,37 +99,36 @@ class Participant:
         """
         self.result = sum(
             max(value * weight for value, weight in zip(points, TRY_WEIGHTS))
-            / routes[route_id].handholds
-            for route_id, points in self.points.items()
+            / route.handholds
+            for route, points in self.points.items()
         ) * (100 / ROUTES_PER_PARTICIPANT)
         return self.result
 
 with open('data/gruppen.csv', 'r', encoding="utf-8") as data:
-    groups = {
-        int(line["ID"]): Group(int(line["ID"]), line["Bezeichnung"])
+    groups = [
+        Group(int(line["ID"]), line["Bezeichnung"])
         for line in csv.DictReader(data)
-    }
-
-with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [
-        Participant(child["Name"], int(child["Gruppe"])) for child in list(csv.DictReader(data))
     ]
+    group_dict = {group.id: group for group in groups}
 
 with open("data/routen.csv", "r", encoding="utf-8") as data:
-    routes = {
-        int(line["ID"]): Route(
+    routes = [
+        Route(
             int(line["ID"]),
             line["Farbe"],
             int(line["Anzahl Griffe"]),
-            [group.id for group in list(groups.values()) if line[str(group.id)] == "yes"],
+            [group for group in groups if line[str(group.id)] == "yes"],
         )
         for line in list(csv.DictReader(data))
-    }
+    ]
 
-
-## we can still load the points from a csv file
-# with open('data/punkte.csv', 'r', encoding="utf-8") as data:
-#     points = list(csv.DictReader(data))
+with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
+    participants = [
+        Participant(
+            line["Name"],
+            group_dict[int(line["Gruppe"])]
+        ) for line in csv.DictReader(data)
+    ]
 
 
 def compute_ranks(participants: list) -> None:
@@ -136,23 +138,23 @@ def compute_ranks(participants: list) -> None:
 
     participants_per_group = {}
     head = ["Name", "Gruppe", "Rang"]
-    for group_id in list(groups.keys()):
-        participants_per_group[group_id] = [p for p in participants if p.group.id == group_id]
+    for group in groups:
+        participants_per_group[group] = [p for p in participants if p.group == group]
 
         for participant, rank in zip(
-            participants_per_group[group_id],
-            rankdata([-p.result for p in participants_per_group[group_id]], method="dense"),
+            participants_per_group[group],
+            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
         ):
             participant.rank = rank
 
     participants.sort(
-        key=lambda participant: (participant.group.id, -participant.rank), reverse=True
+        key=lambda participant: (participant.group.id, participant.rank)
     )
     for participant in participants:
         print(
             f"{participant.rank:>2}",
             f"{participant.result:>6.2f}",
-            ("{:<%s}" % max(len(group.name) for group in list(groups.values()))).format(participant.group.name),
+            ("{:<%s}" % max(len(group.name) for group in groups)).format(participant.group.name),
             participant.name,
         )
 
@@ -168,15 +170,14 @@ def compute_ranks(participants: list) -> None:
 # for testing
 # assigns random points for participants
 def test_insert_random_points() -> None:
-    """ssigns random points for participants"""
+    """assigns random points for participants"""
     import random  # pylint: disable=import-outside-toplevel
 
     for participant in participants:
-        for route in routes.values():
-            if participant.group.id in route.group_ids:
-                participant.insert_points(
-                    route.id, [random.randint(0, route.handholds) for _ in range(3)]
-                )
+        for route in participant.points:
+            participant.insert_points(
+                route, [random.randint(0, route.handholds) for _ in range(3)]
+            )
 
 
 test_insert_random_points()
@@ -201,15 +202,15 @@ def test_many_participants() -> None:
         "Clementine Simony Nichtsehrlang",
     ]
     participants3 = [
-        Participant(random.choice(names) + str(i), random.choice(list(groups.keys()))) for i in range(50)
+        Participant(random.choice(names) + str(i), random.choice(groups)) for i in range(50)
     ]
 
     for participant in participants3:
-        for route in routes.values():
-            if participant.group.id in route.group_ids:
-                participant.insert_points(
-                    route.id, [random.randint(0, route.handholds) for _ in range(3)]
-                )
+        for route in participant.points:
+            participant.insert_points(
+                route, [random.randint(0, route.handholds) for _ in range(3)]
+            )
+
     compute_ranks(participants3)
 
 
