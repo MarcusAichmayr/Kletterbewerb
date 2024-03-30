@@ -1,6 +1,5 @@
 """Classes for climbing competitions"""
 
-ROUTES_PER_PARTICIPANT = 3
 TRY_WEIGHTS = [1, 0.9, 0.8]
 
 
@@ -105,5 +104,5 @@ class Participant:
             max(value * weight for value, weight in zip(points, TRY_WEIGHTS))
             / route.handholds
             for route, points in self.points.items()
-        ) * (100 / ROUTES_PER_PARTICIPANT)
+        ) * (100 / len(self.group.routes))
         return self.result
