@@ -18,4 +18,4 @@ do
     cd ..
 done
 
-echo "Generierte PDFs sind in $EXPORT_DIR."
+echo "Generierte PDFs sind in '$EXPORT_DIR'."

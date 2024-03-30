@@ -15,10 +15,14 @@
 
 * [ ] Ordner `generated`, in dem man die PDFs, berechneten Ergebnisse und Logfiles findet
 
-* [ ] Berechnungen in Logfile abspeichern
+* [ ] Punkte, Ergebnisse und Ränge abspeichern
+  * in csv?
 
 * [ ] Metadaten eintragen
   * [ ] Name der Veranstaltung (z.B. Kletterbewerb Toprope)
+    * Urkunden
+    * Laufzettel
+    * Etiketten
   * [ ] Datum
     * auf Laufzetteln und Urkunden verwenden
     * Alter und Gruppe der Teilnehmer bestimmen
@@ -27,3 +31,9 @@
   * Latex und Python müssen Daten daraus lesen
   * Altersgrenzen für Gruppen einstellen, um Gruppen automatisch zuzuordnen?
     * manuell zuordnen ist flexibler
+
+### Finalrouten
+
+* Wenn es zu einem Finale kommt, muss derzeit `generated/ergebnisse.csv` modifiziert werden.
+* Elegant wäre es, wenn wir einfach die Finalroute ergänzen und den Finalisten die Route zuordnen.
+  * Die Punkte der anderen Teilnehmer der Gruppe ändern sich aber entsprechend, damit die Ränge gleich bleiben.

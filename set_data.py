@@ -16,7 +16,7 @@ if not os.path.exists(GENERATED_DIR):
 
 
 def compute_ranks(participants: list) -> None:
-    """Compute ranks of participants and save results (sorted) in 'data/ergebnisse.csv'."""
+    """Compute ranks of participants and save results (sorted) in 'generated/ergebnisse.csv'."""
     for participant in participants:
         participant.compute_result()
 
@@ -49,7 +49,6 @@ def compute_ranks(participants: list) -> None:
         fmt="%s",
     )
 
-# load data
 with open(DATA_DIR + "gruppen.csv", "r", encoding="utf-8") as data:
     groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
     group_dict = {group.id: group for group in groups}
@@ -72,6 +71,7 @@ with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
     participants = [Participant(line["Name"], group_dict[int(line["Gruppe"])]) for line in csv.DictReader(data)]
 
 def set_route_data() -> None:
+    """save route data in 'generated' directory so that latex can generate 'routenzettel.pdf'"""
     head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
     savetxt(
         GENERATED_DIR +"routen.csv",

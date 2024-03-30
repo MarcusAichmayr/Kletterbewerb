@@ -1,4 +1,5 @@
-# In[]:
+# %%
+"""testing"""
 import random  # pylint: disable=import-outside-toplevel
 from set_data import participants, groups, routes, compute_ranks
 
@@ -12,6 +13,9 @@ for participant in participants:
         )
 
 compute_ranks(participants)
+
+# %%
+routes
 
 # %%
 from classes import Participant
