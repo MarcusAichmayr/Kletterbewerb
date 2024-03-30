@@ -1,6 +1,4 @@
-import csv
-from scipy.stats import rankdata
-from numpy import savetxt
+"""Classes for climbing competitions"""
 
 ROUTES_PER_PARTICIPANT = 3
 TRY_WEIGHTS = [1, 0.9, 0.8]
@@ -10,6 +8,7 @@ class Group:
     """an age-based group"""
     id: int
     name: str
+    routes: list
 
     def __init__(self, group_id: int, name: str) -> None:
         if not isinstance(group_id, int):
@@ -22,6 +21,13 @@ class Group:
 
     def __hash__(self) -> int:
         return hash(self.id)
+
+    def set_routes(self, routes: list) -> None:
+        """assigns routes from a list of all routes"""
+        self.routes = []
+        for route in routes:
+            if self in route.groups:
+                self.routes.append(route)
 
 
 class Route:
@@ -62,13 +68,14 @@ class Participant:
             raise TypeError("'group' should be a Group object.")
         self.name = name
         self.group = group
-        self.points = {route: 0 for route in routes if self.group in route.groups}
+        self.points = {route: 0 for route in self.group.routes if self.group in route.groups}
 
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
 
     def insert_points(self, route: int, points: list) -> None:
-        """insert how many points the participant has scored for the given route
+        """
+        insert how many points the participant has scored for the given route
 
         Args:
             route_id: id of the route
@@ -86,7 +93,8 @@ class Participant:
         self.points[route] = points
 
     def compute_result(self) -> float:
-        """computes the total points of the participant
+        """
+        computes the total points of the participant
 
         Returns:
             total points
@@ -97,57 +105,3 @@ class Participant:
             for route, points in self.points.items()
         ) * (100 / ROUTES_PER_PARTICIPANT)
         return self.result
-
-
-def compute_ranks(participants: list) -> None:
-    """Compute ranks of participants and save results (sorted) in 'data/ergebnisse.csv'."""
-    for participant in participants:
-        participant.compute_result()
-
-    participants_per_group = {}
-    head = ["Name", "Gruppe", "Rang"]
-    for group in groups:
-        participants_per_group[group] = [p for p in participants if p.group == group]
-
-        for participant, rank in zip(
-            participants_per_group[group],
-            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
-        ):
-            participant.rank = rank
-
-    participants.sort(
-        key=lambda participant: (participant.group.id, participant.rank)
-    )
-    for participant in participants:
-        print(
-            f"{participant.rank:>2}",
-            f"{participant.result:>6.2f}",
-            ("{:<%s}" % max(len(group.name) for group in groups)).format(participant.group.name),
-            participant.name,
-        )
-
-    savetxt(
-        "data/ergebnisse.csv",
-        [head] + [[p.name, p.group.name, p.rank] for p in participants],
-        delimiter=",",
-        fmt="%s",
-    )
-
-# load data
-with open('data/gruppen.csv', 'r', encoding="utf-8") as data:
-    groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
-    group_dict = {group.id: group for group in groups}
-
-with open("data/routen.csv", "r", encoding="utf-8") as data:
-    routes = [
-        Route(
-            int(line["ID"]),
-            line["Farbe"],
-            int(line["Anzahl Griffe"]),
-            [group for group in groups if line[str(group.id)] == "yes"],
-        )
-        for line in list(csv.DictReader(data))
-    ]
-
-with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [Participant(line["Name"], group_dict[int(line["Gruppe"])]) for line in csv.DictReader(data)]

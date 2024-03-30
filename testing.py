@@ -1,6 +1,6 @@
 # In[]:
 import random  # pylint: disable=import-outside-toplevel
-from computing_ranks import participants, groups, Participant, compute_ranks
+from load_data import participants, groups, routes, compute_ranks
 
 # In[]:
 # assigns random points for participants
@@ -16,6 +16,8 @@ compute_ranks(participants)
 # %%
 # for testing
 # generate many participants and assign points randomly
+from computing_ranks import Participant
+
 names = [
     "Wollnashorn",
     "Mammut",
