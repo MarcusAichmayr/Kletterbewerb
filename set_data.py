@@ -1,8 +1,9 @@
-import os, csv
+import csv
+import os
 import warnings
-from computing_ranks import Participant, Group, Route
 from numpy import savetxt
 from scipy.stats import rankdata
+from classes import Participant, Group, Route
 
 DATA_DIR = "data/"
 if not os.path.exists(DATA_DIR):
