@@ -1,6 +1,6 @@
 import csv
 from scipy.stats import rankdata
-import numpy as np
+from numpy import savetxt
 
 ROUTES_PER_PARTICIPANT = 3
 TRY_WEIGHTS = [1, 0.9, 0.8]
@@ -43,7 +43,7 @@ class Route:
         self.groups = groups.copy()
 
     def __repr__(self) -> str:
-        return f"'Route {self.id} - {self.color} {[group.name for group in self.groups]} ({self.handholds})'"
+        return f"Route{self.id}"
 
     def __hash__(self) -> int:
         return hash(self.id)
@@ -62,10 +62,7 @@ class Participant:
             raise TypeError("'group' should be a Group object.")
         self.name = name
         self.group = group
-        self.points = {
-            route: 0
-            for route in routes if self.group in route.groups
-        }
+        self.points = {route: 0 for route in routes if self.group in route.groups}
 
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
@@ -85,9 +82,7 @@ class Participant:
             raise ValueError(f"'{route}' ist nicht gedacht für '{self}'")
         for value in points:
             if value > route.handholds:
-                raise ValueError(
-                    f"'{self}' kann nicht {value} Griffe bei '{route}' haben."
-                )
+                raise ValueError(f"'{self}' kann nicht {value} Griffe bei '{route}' haben.")
         self.points[route] = points
 
     def compute_result(self) -> float:
@@ -131,7 +126,7 @@ def compute_ranks(participants: list) -> None:
             participant.name,
         )
 
-    np.savetxt(
+    savetxt(
         "data/ergebnisse.csv",
         [head] + [[p.name, p.group.name, p.rank] for p in participants],
         delimiter=",",
@@ -139,12 +134,8 @@ def compute_ranks(participants: list) -> None:
     )
 
 # load data
-# where should this be?
 with open('data/gruppen.csv', 'r', encoding="utf-8") as data:
-    groups = [
-        Group(int(line["ID"]), line["Bezeichnung"])
-        for line in csv.DictReader(data)
-    ]
+    groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
     group_dict = {group.id: group for group in groups}
 
 with open("data/routen.csv", "r", encoding="utf-8") as data:
@@ -159,9 +150,4 @@ with open("data/routen.csv", "r", encoding="utf-8") as data:
     ]
 
 with open("data/teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [
-        Participant(
-            line["Name"],
-            group_dict[int(line["Gruppe"])]
-        ) for line in csv.DictReader(data)
-    ]
+    participants = [Participant(line["Name"], group_dict[int(line["Gruppe"])]) for line in csv.DictReader(data)]
