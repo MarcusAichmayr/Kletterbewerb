@@ -84,6 +84,6 @@ def set_route_data() -> None:
         delimiter=",",
         fmt="%s",
     )
-    print("Setting route data.")
+    print("Route data set.")
 
 set_route_data()

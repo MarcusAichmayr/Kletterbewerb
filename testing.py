@@ -14,8 +14,6 @@ for participant in participants:
 compute_ranks(participants)
 
 # %%
-# for testing
-# generate many participants and assign points randomly
 from classes import Participant
 
 names = [
