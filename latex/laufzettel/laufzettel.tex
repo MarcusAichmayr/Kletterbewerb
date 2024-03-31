@@ -16,7 +16,7 @@
 \newcolumntype{x}{>{\centering\arraybackslash}p{1.2cm}}
 
 \newcommand{\routen}[1]{
-	\begin{tabular}{@{}|p{4.5cm}|x|x|x}
+	\begin{tabular}{@{}|p{4.8cm}|x|x|x}
 		Route$\setminus$Versuche & 1 & 2 & 3
 		\DTLforeach[\equal{\gruppe}{yes}]{routen}
 		{
@@ -29,51 +29,39 @@
 	\end{tabular}
 }
 
-\pgfmathsetmacro{\width}{19}
-\pgfmathsetmacro{\height}{5}
 \newcommand{\zettel}[2]
-{\begin{tikzpicture}
-	\node [draw] {
-		\begin{tikzpicture}
-			\node (Bewerb) [
-				below left,
-				align=left,
-				inner sep=2pt
-			]
-			{
-				\LARGE Topropeklettern 5. April 2024
-				\\
-				Gruppe: \itshape\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}
-				\\
-				Name:
-				\\[.2cm]
-				\LARGE\bfseries #1
-			};
-			\node (Routen) [
-				right=6pt of Bewerb.north east,
-				anchor=north west,
-				inner sep=-6pt
-			] {\routen{#2}};
-			% \node [below=5pt of Bewerb.south west, anchor=north west] {\huge #1};
-		\end{tikzpicture}
-	};
-	% \draw (0, 0) rectangle (\width, \height);
-	% \node[above=0pt of Routen.north west, anchor=south west, text depth=0pt] {\huge #1};
-	% \node[
-	% 	above=0pt of Routen.north east,
-	% 	anchor=south east,
-	% 	text depth=0pt,
-	% 	font=\itshape,
-	% ] {\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}};
-\end{tikzpicture}
-}
+{
+	\begin{tikzpicture}
+		\node [draw, inner sep=0pt] {
+			\begin{tikzpicture}
+				\node (Bewerb) [
+					below left,
+					align=left,
+					inner sep=4pt
+				]
+				{
+					\LARGE Topropeklettern 5. April 2024
+					\\
+					Gruppe: \itshape\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}
+					\\
+					Name:
+					\\[.2cm]
+					\LARGE\bfseries #1
+				};
+				\node (Routen) [
+					right=0pt of Bewerb.north east,
+					anchor=north west,
+				] {\routen{#2}};
+			\end{tikzpicture}
+		};
+	\end{tikzpicture}}
 
 \begin{document}
 
 \pagestyle{empty}
 
-% \raggedright
-\centering
+\raggedright
+% \centering
 
 \Large
 
