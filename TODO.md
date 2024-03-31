@@ -13,8 +13,6 @@
 
 ## Andere Features
 
-* [ ] Ordner `generated`, in dem man die PDFs, berechneten Ergebnisse und Logfiles findet
-
 * [ ] Punkte, Ergebnisse und Ränge abspeichern
   * in csv?
 
