@@ -5,6 +5,7 @@ TRY_WEIGHTS = [1, 0.9, 0.8]
 
 class Group:
     """an age-based group"""
+
     id: int
     name: str
     routes: list
@@ -31,13 +32,16 @@ class Group:
 
 class Route:
     """describes a climbing route"""
+
     id: int
     color: str
     handholds: int
     groups: list
     creator: str
 
-    def __init__(self, route_id: int, color: str, handholds: int, groups: list, creator: str) -> None:
+    def __init__(
+        self, route_id: int, color: str, handholds: int, groups: list, creator: str
+    ) -> None:
         if not isinstance(route_id, int):
             raise TypeError("'route_id' should be an integer.")
         self.id = route_id
@@ -58,23 +62,39 @@ class Route:
 
 class Participant:
     """person who climbs routes"""
+
     name: str
     group: Group
     rank: int
     points: dict  # Route: list of points
     result: float  # a score between 0 and 100
 
-    def __init__(self, name: str, group: Group) -> None:
+    def __init__(self, name: str, group: Group, rank: int = 0, points: dict = None) -> None:
         if not isinstance(group, Group):
             raise TypeError("'group' should be a Group object.")
         self.name = name
         self.group = group
-        self.rank = 0
-        self.points = {route: [0, 0, 0] for route in self.group.routes if self.group in route.groups}
+        self.rank = rank
+        self.points = {}
+        if points:
+            for route, values in points.items():
+                self.insert_points(route, values)
+        else:
+            for route in group.routes:
+                self.insert_points(route, [0, 0, 0])
         self.compute_result()
 
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
+
+    def to_dict(self) -> dict:
+        """returns this participant as a dictionary"""
+        return {
+            "name": self.name,
+            "group": self.group.id,
+            "rank": self.rank,
+            "points": {route.id: points for route, points in self.points.items()},
+        }
 
     def insert_points(self, route: Route, points: list) -> None:
         """

@@ -1,7 +1,15 @@
 # %%
 """testing"""
+
 import random  # pylint: disable=import-outside-toplevel
-from set_data import participants, groups, routes, compute_ranks
+from set_data import (
+    participants,
+    groups,
+    routes,
+    compute_ranks,
+    save_participants,
+    participants_from_json,
+)
 
 # In[]:
 # assigns random points for participants
@@ -18,6 +26,12 @@ compute_ranks(participants)
 routes
 
 # %%
+save_participants(participants)
+
+# %%
+participants_from_json("generated/teilnehmer.json")
+
+# %%
 from classes import Participant
 
 names = [
@@ -30,16 +44,16 @@ names = [
     "Clementine Simone Nichtsehrweit",
     "Clementine Simony Nichtsehrlang",
 ]
-participants3 = [
+participants = [
     Participant(random.choice(names) + str(i), random.choice(groups)) for i in range(50)
 ]
 
-for participant in participants3:
+for participant in participants:
     for route in participant.points:
         participant.insert_points(
             route, [random.randint(0, route.handholds) for _ in range(3)]
         )
 
-compute_ranks(participants3)
+compute_ranks(participants)
 
 # %%
