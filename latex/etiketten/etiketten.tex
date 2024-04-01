@@ -25,6 +25,7 @@
 \pgfmathsetmacro{\height}{2}
 
 \DTLloaddb{gruppen}{../../data/gruppen.csv}
+\DTLloaddb{bewerb}{../../data/bewerb.csv}
 \DTLforeach{gruppen}{\inputgruppe=Bezeichnung}
 {
 	\begin{tikzpicture}
@@ -32,7 +33,8 @@
 		\node[align=center] at (.5*\width, .5*\height) {
 			\textbf{1. Rang}
 			\\
-			Topropeklettern 2024
+			\DTLfetch{bewerb}{Feld}{Name}{Eintrag}
+			\DTLfetch{bewerb}{Feld}{Jahr}{Eintrag}
 			\\
 			OeAV Sektion Schwanenstadt
 			\\
