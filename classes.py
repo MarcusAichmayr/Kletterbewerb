@@ -60,16 +60,18 @@ class Participant:
     """person who climbs routes"""
     name: str
     group: Group
-    rank: int = 0
-    points: dict
-    result: float = 0  # a score between 0 and 100
+    rank: int
+    points: dict  # Route: list of points
+    result: float  # a score between 0 and 100
 
     def __init__(self, name: str, group: Group) -> None:
         if not isinstance(group, Group):
             raise TypeError("'group' should be a Group object.")
         self.name = name
         self.group = group
-        self.points = {route: 0 for route in self.group.routes if self.group in route.groups}
+        self.rank = 0
+        self.points = {route: [0, 0, 0] for route in self.group.routes if self.group in route.groups}
+        self.compute_result()
 
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
@@ -91,7 +93,7 @@ class Participant:
         for value in points:
             if value > route.handholds:
                 raise ValueError(f"'{self}' kann nicht {value} Griffe bei '{route}' haben.")
-        self.points[route] = points
+        self.points[route] = points.copy()
 
     def compute_result(self) -> float:
         """
