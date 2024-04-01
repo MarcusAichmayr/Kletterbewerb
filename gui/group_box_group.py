@@ -1,7 +1,16 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QFrame, QGridLayout, QGroupBox, QHBoxLayout, QLabel, QSpinBox
+from PySide6.QtWidgets import (
+    QDoubleSpinBox,
+    QFrame,
+    QGridLayout,
+    QGroupBox,
+    QHBoxLayout,
+    QLabel,
+)
 
 from classes import Participant, Route
+
+RESULT_FMT = "{:.3f}"
 
 
 class GroupBoxGroup(QGroupBox):
@@ -12,7 +21,7 @@ class GroupBoxGroup(QGroupBox):
     heading_labels: list[QLabel]
     participant_labels: dict[Participant, QLabel]
     participant_res_labels: dict[Participant, QLabel]
-    participant_try_inputs: dict[Participant, dict[Route, list[QSpinBox]]]
+    participant_try_inputs: dict[Participant, dict[Route, list[QDoubleSpinBox]]]
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -91,7 +100,7 @@ class GroupBoxGroup(QGroupBox):
         col = 1
         lbl = QLabel(self)
         lbl.setObjectName(f"lbl_participant_{self.name}_{row}_{col}")
-        lbl.setText(str(participant.result))
+        lbl.setText(RESULT_FMT.format(participant.result))
         self.grid_layout.addWidget(lbl, row, col, 1, 1)
         self.participant_res_labels[participant] = lbl
 
@@ -102,11 +111,23 @@ class GroupBoxGroup(QGroupBox):
             tries_layout.setObjectName(f"tries_layout_{participant.name}_{row}_{col}")
             spin_boxes = []
             for t in range(self.tries_per_route):
-                spin_box = QSpinBox(self)
+                spin_box = QDoubleSpinBox(self)
                 spin_box.setObjectName(f"tries_spin_box_{participant.name}_{row}_{col}_{t}")
                 spin_box.setMaximum(r.handholds)
                 spin_box.setValue(participant.points[r][t])
+                spin_box.valueChanged.connect(
+                    lambda _f: self._participant_tries_changed(participant)
+                )
                 spin_boxes.append(spin_box)
                 tries_layout.addWidget(spin_box)
             self.participant_try_inputs[participant][r] = spin_boxes
             self.grid_layout.addLayout(tries_layout, row, col, 1, 1)
+
+    def _participant_tries_changed(self, participant: Participant) -> None:
+        for r in self.participant_try_inputs[participant]:
+            points = []
+            for spin_box in self.participant_try_inputs[participant][r]:
+                points.append(spin_box.value())
+            participant.insert_points(r, points)
+        result = participant.compute_result()
+        self.participant_res_labels[participant].setText(RESULT_FMT.format(result))
