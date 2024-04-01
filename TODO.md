@@ -7,14 +7,16 @@
     * Python oder Godot
   * In CSV-Datei eintragen und laden.
 
-* mehrere Tabellen, je nach Gruppe
-
-* [ ] Skripte, die Unterlagen generieren
+* mehrere Tabellen, je nach Gruppe?
 
 ## Andere Features
 
 * [ ] Punkte, Ergebnisse und Ränge abspeichern
   * in csv?
+
+* [ ] Anzahl Versuche abändern
+  * pro Gruppe
+  * in `gruppen.csv`
 
 * [ ] Alter und Gruppe der Teilnehmer automatisch bestimmen
   * [ ] verwende Datum in `bewerb.csv`
