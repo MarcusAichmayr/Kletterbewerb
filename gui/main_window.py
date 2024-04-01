@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import QMainWindow
 
-from classes import Group, Participant, Route
-from gui.ui_main_window import Ui_MainWindow
+from classes import Group, Participant
 from gui.group_box_group import GroupBoxGroup
+from gui.ui_main_window import Ui_MainWindow
 
 
 class MainWindow(QMainWindow, Ui_MainWindow):
@@ -29,5 +29,4 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for grp in groups:
             box = boxes[grp]
             grp_participants = [x for x in participants if x.group == grp]
-            # grp_routes = [x for x in routes if grp in x.groups]
             box.setup_group(grp_participants, tries_per_route, grp.name, grp.routes)

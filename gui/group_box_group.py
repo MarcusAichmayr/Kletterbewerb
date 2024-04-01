@@ -2,10 +2,9 @@ from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGridLayout, QGroupBox, QHBoxLayout, QLabel, QSpinBox
 
 from classes import Participant, Route
-from gui.ui_group_box_group import Ui_GroupBox
 
 
-class GroupBoxGroup(QGroupBox, Ui_GroupBox):
+class GroupBoxGroup(QGroupBox):
     name: str
     tries_per_route: int
     routes: list[Route]
