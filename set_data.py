@@ -1,4 +1,5 @@
 import csv
+import json
 import os
 import warnings
 from numpy import savetxt
@@ -28,30 +29,31 @@ def compute_ranks(participants: list) -> None:
             participants_per_group[group],
             rankdata([-p.result for p in participants_per_group[group]], method="dense"),
         ):
-            participant.rank = rank
+            participant.rank = int(rank)
 
-    participants.sort(
-        key=lambda participant: (participant.group.id, participant.rank)
-    )
+    participants.sort(key=lambda participant: (participant.group.id, participant.rank))
     for participant in participants:
         print(
             f"{participant.rank:>2}",
             f"{participant.result:>6.2f}",
-            ("{:<%s}" % max(len(group.name) for group in groups)).format(participant.group.name),
+            ("{:<%s}" % max(len(group.name) for group in groups)).format(
+                participant.group.name
+            ),
             participant.name,
         )
 
     head = ["Name", "Gruppe", "Rang"]
     savetxt(
-        GENERATED_DIR +"ergebnisse.csv",
+        GENERATED_DIR + "ergebnisse.csv",
         [head] + [[p.name, p.group.name, p.rank] for p in participants],
         delimiter=",",
         fmt="%s",
     )
 
+
 with open(DATA_DIR + "gruppen.csv", "r", encoding="utf-8") as data:
     groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
-    group_dict = {group.id: group for group in groups}
+group_dict = {group.id: group for group in groups}
 
 with open(DATA_DIR + "routen.csv", "r", encoding="utf-8") as data:
     routes = [
@@ -64,26 +66,57 @@ with open(DATA_DIR + "routen.csv", "r", encoding="utf-8") as data:
         )
         for line in list(csv.DictReader(data))
     ]
+route_dict = {route.id: route for route in routes}
+
 for group in groups:
     group.set_routes(routes)
 
 with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [Participant(line["Name"], group_dict[int(line["Gruppe"])]) for line in csv.DictReader(data)]
+    participants = [
+        Participant(line["Name"], group_dict[int(line["Gruppe"])])
+        for line in csv.DictReader(data)
+    ]
+
 
 def set_route_data() -> None:
     """save route data in 'generated' directory so that latex can generate 'routenzettel.pdf'"""
     head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
     savetxt(
-        GENERATED_DIR +"routen.csv",
-        [head] + [[
-            route.id,
-            route.color,
-            route.creator,
-            "/".join(group.name for group in route.groups),
-        ] for route in routes],
+        GENERATED_DIR + "routen.csv",
+        [head]
+        + [
+            [
+                route.id,
+                route.color,
+                route.creator,
+                "/".join(group.name for group in route.groups),
+            ]
+            for route in routes
+        ],
         delimiter=",",
         fmt="%s",
     )
     print("Route data set.")
+
+
+def save_participants(participants: list) -> None:
+    """save a list of participants as json"""
+    with open("generated/teilnehmer.json", "w", encoding="utf-8") as f:
+        json.dump([p.to_dict() for p in participants], f)
+
+
+def participants_from_json(file: str = "generated/teilnehmer.json") -> list:
+    with open(file) as f:
+        participants = json.load(f)
+    return [
+        Participant(
+            p["name"],
+            group_dict[p["group"]],
+            p["rank"],
+            {route_dict[int(route_id)]: points for route_id, points in p["points"].items()},
+        )
+        for p in participants
+    ]
+
 
 set_route_data()

@@ -26,7 +26,7 @@ TODO
 
 ## Installation
 
-All dependencies are listed in pyproject.toml.
+All dependencies are listed in `pyproject.toml`.
 To install them with [Poetry](https://python-poetry.org/docs/#installing-with-the-official-installer),
 call `poetry install` (or `poetry install --only main` if you don't need development dependencies) 
 In your IDE, you may want to set the python interpreter used to be the one in the created environment.

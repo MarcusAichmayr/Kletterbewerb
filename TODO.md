@@ -14,9 +14,11 @@
 * [ ] Punkte, Ergebnisse und Ränge abspeichern
   * in csv?
 
-* [ ] Anzahl Versuche abändern
+* [ ] Anzahl Versuche
   * pro Gruppe
   * in `gruppen.csv`
+
+* [ ] Was ist, wenn 2 Teilnehmer den selben Namen haben?
 
 * [ ] Alter und Gruppe der Teilnehmer automatisch bestimmen
   * [ ] verwende Datum in `bewerb.csv`
