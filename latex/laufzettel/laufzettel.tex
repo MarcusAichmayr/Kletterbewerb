@@ -28,7 +28,6 @@
 		\\
 	\end{tabular}
 }
-
 \newcommand{\zettel}[2]
 {
 	\begin{tikzpicture}
@@ -40,7 +39,7 @@
 					inner sep=4pt
 				]
 				{
-					\LARGE Topropeklettern 5. April 2024
+					\LARGE\DTLfetch{bewerb}{Feld}{Name}{Eintrag} \DTLfetch{bewerb}{Feld}{Datum}{Eintrag}
 					\\
 					Gruppe: \itshape\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}
 					\\
@@ -61,22 +60,15 @@
 \pagestyle{empty}
 
 \raggedright
-% \centering
 
 \Large
-
-\DTLloaddb{routen}{../../data/routen.csv}
-\DTLloaddb{teilnehmer}{../../data/teilnehmer.csv}
-\DTLloaddb{gruppen}{../../data/gruppen.csv}
 
 \DTLforeach{teilnehmer}
 {
 	\inputname=Name,
-	\inputalter=Alter,
 	\inputgruppe=Gruppe}
 {\zettel{\inputname}{\inputgruppe}}
 % \zettel{Ulrike Gurke}{1}
 % \zettel{}{1} % Blanko
-% \zettel{}{4} % Blanko
 
 \end{document}
