@@ -16,14 +16,8 @@
 * [ ] Punkte, Ergebnisse und Ränge abspeichern
   * in csv?
 
-* [ ] Metadaten eintragen
-  * [ ] Name der Veranstaltung (z.B. Kletterbewerb Toprope)
-    * Urkunden
-    * Laufzettel
-    * Etiketten
-  * [ ] Datum
-    * auf Laufzetteln und Urkunden verwenden
-    * Alter und Gruppe der Teilnehmer bestimmen
+* [ ] Alter und Gruppe der Teilnehmer automatisch bestimmen
+  * [ ] verwende Datum in `bewerb.csv`
 
 * [x] Gruppen IDs auf Gruppennamen in eigener CSV-Datei zuordnen
   * Latex und Python müssen Daten daraus lesen
