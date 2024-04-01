@@ -16,24 +16,46 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
     <item>
-     <widget class="GroupBoxGroup" name="groupBox">
-      <property name="title">
-       <string>Jugend</string>
+     <widget class="QScrollArea" name="scrollArea">
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="GroupBoxGroup" name="groupBox_2">
-      <property name="title">
-       <string>Kinder</string>
+      <property name="widgetResizable">
+       <bool>true</bool>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="GroupBoxGroup" name="groupBox_3">
-      <property name="title">
-       <string>Mini</string>
-      </property>
+      <widget class="QWidget" name="scrollAreaWidgetContents">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>691</width>
+         <height>500</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="GroupBoxGroup" name="groupBox">
+          <property name="title">
+           <string>Jugend</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="GroupBoxGroup" name="groupBox_2">
+          <property name="title">
+           <string>Kinder</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="GroupBoxGroup" name="groupBox_3">
+          <property name="title">
+           <string>Mini</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
     </item>
    </layout>
