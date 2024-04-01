@@ -28,7 +28,6 @@
 		\\
 	\end{tabular}
 }
-
 \newcommand{\zettel}[2]
 {
 	\begin{tikzpicture}
@@ -61,23 +60,15 @@
 \pagestyle{empty}
 
 \raggedright
-% \centering
 
 \Large
-
-\DTLloaddb{routen}{../../data/routen.csv}
-\DTLloaddb{teilnehmer}{../../data/teilnehmer.csv}
-\DTLloaddb{gruppen}{../../data/gruppen.csv}
-\DTLloaddb{bewerb}{../../data/bewerb.csv}
 
 \DTLforeach{teilnehmer}
 {
 	\inputname=Name,
-	\inputalter=Alter,
 	\inputgruppe=Gruppe}
 {\zettel{\inputname}{\inputgruppe}}
 % \zettel{Ulrike Gurke}{1}
 % \zettel{}{1} % Blanko
-% \zettel{}{4} % Blanko
 
 \end{document}

@@ -24,8 +24,6 @@
 \pgfmathsetmacro{\width}{5}
 \pgfmathsetmacro{\height}{2}
 
-\DTLloaddb{gruppen}{../../data/gruppen.csv}
-\DTLloaddb{bewerb}{../../data/bewerb.csv}
 \DTLforeach{gruppen}{\inputgruppe=Bezeichnung}
 {
 	\begin{tikzpicture}

@@ -22,3 +22,11 @@
 % \usepackage[sfdefault]{ClearSans} %% option 'sfdefault' activates Clear Sans as the default text font
 \usepackage{libertine} % ähnliche Größe wie stix. Blockschrift ist aber schmäler.
 \usepackage[T1]{fontenc}
+
+\newcommand{\dataDirectory}{../../data/}
+% \newcommand{\dataDirectory}{../../data_template/}
+
+\DTLloaddb{routen}{\dataDirectory routen.csv}
+\DTLloaddb{teilnehmer}{\dataDirectory teilnehmer.csv}
+\DTLloaddb{gruppen}{\dataDirectory gruppen.csv}
+\DTLloaddb{bewerb}{\dataDirectory bewerb.csv}

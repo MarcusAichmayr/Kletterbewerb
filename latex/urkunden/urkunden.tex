@@ -1,7 +1,6 @@
 \documentclass[a4paper, 12pt]{article}
 
 \input{../include/libs.tex}
-\usetikzlibrary{decorations, decorations.pathmorphing, decorations.shapes}
 
 \usepackage[none]{hyphenat} % verhindert hyphen (auch bei den Namen der Teilnehmern)
 
@@ -47,19 +46,8 @@
 
 \pagestyle{empty}
 
-%% komisches Rechteck
-% \begin{tikzpicture}[remember picture, overlay]
-% 	\draw[
-% 		line width=.2cm,
-% 		% decorate,
-% 		% decoration=triangles
-% 	] (0, 0) rectangle (.9*\textwidth, -.9*\textheight);
-% \end{tikzpicture}
-
-\DTLloaddb{teilnehmer}{../../generated/ergebnisse.csv}
-\DTLloaddb{bewerb}{../../data/bewerb.csv}
-
-\DTLforeach{teilnehmer}
+\DTLloaddb{ergebnisse}{../../generated/ergebnisse.csv}
+\DTLforeach{ergebnisse}
 {
 	\inputname=Name,
 	\inputgruppe=Gruppe,
