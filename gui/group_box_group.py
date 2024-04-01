@@ -104,6 +104,8 @@ class GroupBoxGroup(QGroupBox):
             for t in range(self.tries_per_route):
                 spin_box = QSpinBox(self)
                 spin_box.setObjectName(f"tries_spin_box_{participant.name}_{row}_{col}_{t}")
+                spin_box.setMaximum(r.handholds)
+                spin_box.setValue(participant.points[r][t])
                 spin_boxes.append(spin_box)
                 tries_layout.addWidget(spin_box)
             self.participant_try_inputs[participant][r] = spin_boxes
