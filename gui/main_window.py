@@ -1,4 +1,4 @@
-from PySide6.QtCore import QCoreApplication, QMetaObject, QRect
+from PySide6.QtCore import QRect
 from PySide6.QtWidgets import (
     QAbstractScrollArea,
     QMainWindow,
@@ -11,18 +11,52 @@ from PySide6.QtWidgets import (
 
 from classes import Group, Participant
 from gui.group_box_group import GroupBoxGroup
-from gui.ui_main_window import Ui_MainWindow
 
 
-class MainWindow(QMainWindow, Ui_MainWindow):
+class MainWindow(QMainWindow):
     verticalLayout: QVBoxLayout
     groupBox: GroupBoxGroup
     groupBox_2: GroupBoxGroup
     groupBox_3: GroupBoxGroup
+    group_boxes: dict[Group, GroupBoxGroup]
 
     def __init__(self):
         super().__init__()
-        self.setupUi(self)
+        self.setupUi()
+
+    def setupUi(self) -> None:
+        self.setWindowTitle("Kletterbewerb")
+        if not self.objectName():
+            self.setObjectName("MainWindow")
+        self.resize(711, 564)
+        self.centralwidget = QWidget(self)
+        self.centralwidget.setObjectName("centralwidget")
+        self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.scrollArea = QScrollArea(self.centralwidget)
+        self.scrollArea.setObjectName("scrollArea")
+        self.scrollArea.setSizeAdjustPolicy(
+            QAbstractScrollArea.SizeAdjustPolicy.AdjustToContents
+        )
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 691, 500))
+        self.verticalLayout = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout.setObjectName("verticalLayout")
+
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.verticalLayout_2.addWidget(self.scrollArea)
+
+        self.setCentralWidget(self.centralwidget)
+        self.menubar = QMenuBar(self)
+        self.menubar.setObjectName("menubar")
+        self.menubar.setGeometry(QRect(0, 0, 711, 22))
+        self.setMenuBar(self.menubar)
+        self.statusbar = QStatusBar(self)
+        self.statusbar.setObjectName("statusbar")
+        self.setStatusBar(self.statusbar)
 
     def setup_groups(
         self,
@@ -31,22 +65,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         groups: list[Group],
     ) -> None:
         boxes: dict[Group, GroupBoxGroup] = {}
-        if len(groups) == 3:
-            boxes = {
-                groups[0]: self.groupBox,
-                groups[1]: self.groupBox_2,
-                groups[2]: self.groupBox_3,
-            }
-        else:
-            self.verticalLayout.removeWidget(self.groupBox)
-            self.verticalLayout.removeWidget(self.groupBox_2)
-            self.verticalLayout.removeWidget(self.groupBox_3)
-            for grp in groups:
-                grp_box = GroupBoxGroup(self.scrollAreaWidgetContents)
-                grp_box.setObjectName(f"group_box_group_{grp.name}")
-                self.verticalLayout.addWidget(grp_box)
-                boxes[grp] = grp_box
+        for grp in groups:
+            grp_box = GroupBoxGroup(self.scrollAreaWidgetContents)
+            grp_box.setObjectName(f"group_box_group_{grp.name}")
+            self.verticalLayout.addWidget(grp_box)
+            boxes[grp] = grp_box
         for grp in groups:
             box = boxes[grp]
             grp_participants = [x for x in participants if x.group == grp]
             box.setup_group(grp_participants, tries_per_route, grp.name, grp.routes)
+        self.group_boxes = boxes
