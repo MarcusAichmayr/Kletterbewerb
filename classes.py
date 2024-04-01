@@ -74,7 +74,7 @@ class Participant:
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
 
-    def insert_points(self, route: int, points: list) -> None:
+    def insert_points(self, route: Route, points: list) -> None:
         """
         insert how many points the participant has scored for the given route
 
