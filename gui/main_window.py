@@ -1,9 +1,13 @@
 from PySide6.QtCore import QRect
 from PySide6.QtWidgets import (
     QAbstractScrollArea,
+    QHBoxLayout,
     QMainWindow,
     QMenuBar,
+    QPushButton,
     QScrollArea,
+    QSizePolicy,
+    QSpacerItem,
     QStatusBar,
     QVBoxLayout,
     QWidget,
@@ -28,7 +32,7 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Kletterbewerb")
         if not self.objectName():
             self.setObjectName("MainWindow")
-        self.resize(711, 564)
+        self.resize(750, 600)
         self.centralwidget = QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
@@ -48,6 +52,22 @@ class MainWindow(QMainWindow):
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
         self.verticalLayout_2.addWidget(self.scrollArea)
+
+        self.horizontalLayout = QHBoxLayout()
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.horizontalSpacer = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        self.horizontalLayout.addItem(self.horizontalSpacer)
+
+        self.save_button = QPushButton(self.centralwidget)
+        self.save_button.setObjectName("save_button")
+        self.save_button.setText("Speichern")
+
+        self.horizontalLayout.addWidget(self.save_button)
+
+        self.verticalLayout_2.addLayout(self.horizontalLayout)
 
         self.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(self)
