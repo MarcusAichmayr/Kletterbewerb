@@ -16,7 +16,7 @@ if not os.path.exists(GENERATED_DIR):
     os.makedirs(GENERATED_DIR)
 
 
-def compute_ranks(participants: list) -> None:
+def compute_ranks(participants: list[Participant]) -> None:
     """Compute ranks of participants and save results (sorted) in 'generated/ergebnisse.csv'."""
     for participant in participants:
         participant.compute_result()
@@ -51,6 +51,59 @@ def compute_ranks(participants: list) -> None:
     )
 
 
+def set_route_data() -> None:
+    """save route data in 'generated' directory so that latex can generate 'routenzettel.pdf'"""
+    head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
+    savetxt(
+        GENERATED_DIR + "routen.csv",
+        [head]
+        + [
+            [
+                route.id,
+                route.color,
+                route.creator,
+                "/".join(group.name for group in route.groups),
+            ]
+            for route in routes
+        ],
+        delimiter=",",
+        fmt="%s",
+    )
+    print("Route data set.")
+
+
+def save_participants(participants: list[Participant]) -> None:
+    """save a list of participants as json"""
+    with open("generated/teilnehmer.json", "w", encoding="utf-8") as f:
+        json.dump([p.to_dict() for p in participants], f)
+
+
+def participants_from_json(file: str = "generated/teilnehmer.json") -> list:
+    with open(file) as f:
+        participants = json.load(f)
+    return [
+        Participant(
+            p["name"],
+            group_dict[p["group"]],
+            p["rank"],
+            {route_dict[int(route_id)]: points for route_id, points in p["points"].items()},
+        )
+        for p in participants
+    ]
+
+
+def load_participants() -> list[Participant]:
+    """load participants from `generated/teilnehmer.json` if possible or `data/teilnehmer.json`"""
+    try:
+        return participants_from_json()
+    except FileNotFoundError:
+        with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
+            return [
+                Participant(line["Name"], group_dict[int(line["Gruppe"])])
+                for line in csv.DictReader(data)
+            ]
+
+
 with open(DATA_DIR + "gruppen.csv", "r", encoding="utf-8") as data:
     groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
 group_dict = {group.id: group for group in groups}
@@ -76,47 +129,5 @@ with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
         Participant(line["Name"], group_dict[int(line["Gruppe"])])
         for line in csv.DictReader(data)
     ]
-
-
-def set_route_data() -> None:
-    """save route data in 'generated' directory so that latex can generate 'routenzettel.pdf'"""
-    head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
-    savetxt(
-        GENERATED_DIR + "routen.csv",
-        [head]
-        + [
-            [
-                route.id,
-                route.color,
-                route.creator,
-                "/".join(group.name for group in route.groups),
-            ]
-            for route in routes
-        ],
-        delimiter=",",
-        fmt="%s",
-    )
-    print("Route data set.")
-
-
-def save_participants(participants: list) -> None:
-    """save a list of participants as json"""
-    with open("generated/teilnehmer.json", "w", encoding="utf-8") as f:
-        json.dump([p.to_dict() for p in participants], f)
-
-
-def participants_from_json(file: str = "generated/teilnehmer.json") -> list:
-    with open(file) as f:
-        participants = json.load(f)
-    return [
-        Participant(
-            p["name"],
-            group_dict[p["group"]],
-            p["rank"],
-            {route_dict[int(route_id)]: points for route_id, points in p["points"].items()},
-        )
-        for p in participants
-    ]
-
 
 set_route_data()

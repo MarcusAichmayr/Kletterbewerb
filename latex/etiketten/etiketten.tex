@@ -2,16 +2,32 @@
 
 \input{../include/libs.tex}
 
-\usepackage[
-	top = 8mm,
-	bottom = 9mm,
-	left = 21mm,
-	right = 9mm
-]{geometry}
+\usepackage[margin=0mm]{geometry}
 
 \setlength\parindent{0pt}
 % \fontdimen2\font=0pt
-\setlength\lineskip{13mm}
+\setlength\lineskip{0mm}
+
+\newcommand{\etikett}[2]{\begin{tikzpicture}
+	\path (0, 0) rectangle (\width, \height)
+	node[midway] {
+		\begin{tikzpicture}
+			\node (Etikett) [align=center, scale=#1] {
+				\textbf{1. Rang}
+				\\
+				\DTLfetch{bewerb}{Feld}{Name}{Eintrag}
+				\DTLfetch{bewerb}{Feld}{Jahr}{Eintrag}
+				\\
+				OeAV Sektion Schwanenstadt
+				\\
+				Gruppe:
+				\textit{\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}}
+			};
+			\node[below left=0pt of Etikett.north east, scale=#1] % Logo
+			{\includegraphics[width=.5cm]{av_edelweiss.pdf}};
+		\end{tikzpicture}
+	};
+\end{tikzpicture}}
 
 \begin{document}
 
@@ -21,28 +37,22 @@
 
 % \large
 
-\pgfmathsetmacro{\width}{5}
-\pgfmathsetmacro{\height}{2}
+\pgfmathsetmacro{\width}{7}
+\pgfmathsetmacro{\height}{4.24}
 
-\DTLforeach{gruppen}{\inputgruppe=Bezeichnung}
-{
-	\begin{tikzpicture}
-		\draw (0, 0) rectangle (\width, \height);
-		\node[align=center] at (.5*\width, .5*\height) {
-			\textbf{1. Rang}
-			\\
-			\DTLfetch{bewerb}{Feld}{Name}{Eintrag}
-			\DTLfetch{bewerb}{Feld}{Jahr}{Eintrag}
-			\\
-			OeAV Sektion Schwanenstadt
-			\\
-			Gruppe:
-			\textit{\inputgruppe}
-		};
-		\node[below left] at (\width, \height) % Logo
-		{\includegraphics[width=.6cm]{av_edelweiss.pdf}};
-	\end{tikzpicture}
-	\hspace{9mm}
-}
+% \DTLforeach{gruppen}{\inputgruppe=Bezeichnung}
+% {
+% 	\etikett{1.4}{1}
+% 	\hspace{-8pt}
+% }
+
+\etikett{1.4}{1}
+\hspace{-5pt}
+\etikett{1.4}{2}
+\hspace{-5pt}
+\etikett{1.2}{3}
+\hspace{-5pt}
+\etikett{1.2}{4}
+
 
 \end{document}
