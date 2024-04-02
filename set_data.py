@@ -51,33 +51,6 @@ def compute_ranks(participants: list[Participant]) -> None:
     )
 
 
-with open(DATA_DIR + "gruppen.csv", "r", encoding="utf-8") as data:
-    groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
-group_dict = {group.id: group for group in groups}
-
-with open(DATA_DIR + "routen.csv", "r", encoding="utf-8") as data:
-    routes = [
-        Route(
-            int(line["ID"]),
-            line["Farbe"],
-            int(line["Anzahl Griffe"]),
-            [group for group in groups if line[str(group.id)] == "yes"],
-            line["Routensetzer"],
-        )
-        for line in list(csv.DictReader(data))
-    ]
-route_dict = {route.id: route for route in routes}
-
-for group in groups:
-    group.set_routes(routes)
-
-with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [
-        Participant(line["Name"], group_dict[int(line["Gruppe"])])
-        for line in csv.DictReader(data)
-    ]
-
-
 def set_route_data() -> None:
     """save route data in 'generated' directory so that latex can generate 'routenzettel.pdf'"""
     head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
@@ -118,5 +91,43 @@ def participants_from_json(file: str = "generated/teilnehmer.json") -> list:
         for p in participants
     ]
 
+
+def load_participants() -> list[Participant]:
+    """load participants from `generated/teilnehmer.json` if possible or `data/teilnehmer.json`"""
+    try:
+        return participants_from_json()
+    except FileNotFoundError:
+        with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
+            return [
+                Participant(line["Name"], group_dict[int(line["Gruppe"])])
+                for line in csv.DictReader(data)
+            ]
+
+
+with open(DATA_DIR + "gruppen.csv", "r", encoding="utf-8") as data:
+    groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
+group_dict = {group.id: group for group in groups}
+
+with open(DATA_DIR + "routen.csv", "r", encoding="utf-8") as data:
+    routes = [
+        Route(
+            int(line["ID"]),
+            line["Farbe"],
+            int(line["Anzahl Griffe"]),
+            [group for group in groups if line[str(group.id)] == "yes"],
+            line["Routensetzer"],
+        )
+        for line in list(csv.DictReader(data))
+    ]
+route_dict = {route.id: route for route in routes}
+
+for group in groups:
+    group.set_routes(routes)
+
+with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
+    participants = [
+        Participant(line["Name"], group_dict[int(line["Gruppe"])])
+        for line in csv.DictReader(data)
+    ]
 
 set_route_data()

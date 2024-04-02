@@ -4,11 +4,11 @@ from PySide6.QtWidgets import QApplication
 
 from classes import TRY_WEIGHTS
 from gui.main_window import MainWindow
-from set_data import groups, participants_from_json, save_participants
+from set_data import groups, save_participants, load_participants
 
 
 def main():
-    participants = participants_from_json()
+    participants = load_participants()
     app = QApplication(sys.argv)
     main_win = MainWindow()
     main_win.setup_groups(participants, len(TRY_WEIGHTS), groups)
