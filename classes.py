@@ -76,12 +76,11 @@ class Participant:
         self.group = group
         self.rank = rank
         self.points = {}
+        for route in group.routes:
+            self.insert_points(route, [0, 0, 0])
         if points:
             for route, values in points.items():
                 self.insert_points(route, values)
-        else:
-            for route in group.routes:
-                self.insert_points(route, [0, 0, 0])
         self.compute_result()
 
     def __repr__(self) -> str:
