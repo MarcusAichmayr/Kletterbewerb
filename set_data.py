@@ -130,4 +130,5 @@ with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
         for line in csv.DictReader(data)
     ]
 
-set_route_data()
+if __name__ == "__main__":
+    set_route_data()
