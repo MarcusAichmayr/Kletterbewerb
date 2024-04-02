@@ -36,7 +36,7 @@ class Route:
     id: int
     color: str
     handholds: int
-    groups: list
+    groups: list[Group]
     creator: str
 
     def __init__(
@@ -66,10 +66,10 @@ class Participant:
     name: str
     group: Group
     rank: int
-    points: dict  # Route: list of points
+    points: dict[Route: list[int]]  # Route: list of points
     result: float  # a score between 0 and 100
 
-    def __init__(self, name: str, group: Group, rank: int = 0, points: dict = None) -> None:
+    def __init__(self, name: str, group: Group, rank: int = 0, points: dict[Route: list[int]] = None) -> None:
         if not isinstance(group, Group):
             raise TypeError("'group' should be a Group object.")
         self.name = name
@@ -96,7 +96,7 @@ class Participant:
             "points": {route.id: points for route, points in self.points.items()},
         }
 
-    def insert_points(self, route: Route, points: list) -> None:
+    def insert_points(self, route: Route, points: list[Route: int]) -> None:
         """
         insert how many points the participant has scored for the given route
 

@@ -16,7 +16,7 @@ if not os.path.exists(GENERATED_DIR):
     os.makedirs(GENERATED_DIR)
 
 
-def compute_ranks(participants: list) -> None:
+def compute_ranks(participants: list[Participant]) -> None:
     """Compute ranks of participants and save results (sorted) in 'generated/ergebnisse.csv'."""
     for participant in participants:
         participant.compute_result()
@@ -99,7 +99,7 @@ def set_route_data() -> None:
     print("Route data set.")
 
 
-def save_participants(participants: list) -> None:
+def save_participants(participants: list[Participant]) -> None:
     """save a list of participants as json"""
     with open("generated/teilnehmer.json", "w", encoding="utf-8") as f:
         json.dump([p.to_dict() for p in participants], f)
