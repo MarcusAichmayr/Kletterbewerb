@@ -62,7 +62,11 @@ class GroupBoxGroup(QGroupBox):
         col = 1
         lbl = QLabel(self)
         lbl.setObjectName(f"lbl_head_{col}")
-        lbl.setAlignment(Qt.AlignmentFlag.AlignRight)
+        lbl.setAlignment(
+            Qt.AlignmentFlag.AlignRight
+            | Qt.AlignmentFlag.AlignTrailing
+            | Qt.AlignmentFlag.AlignVCenter
+        )
         lbl.setText("Ergebnis")
         self.grid_layout.addWidget(lbl, 0, col, 1, 1)
         self.heading_labels.append(lbl)
@@ -101,7 +105,11 @@ class GroupBoxGroup(QGroupBox):
         col = 1
         lbl = QLabel(self)
         lbl.setObjectName(f"lbl_participant_{self.name}_{row}_{col}")
-        lbl.setAlignment(Qt.AlignmentFlag.AlignRight)
+        lbl.setAlignment(
+            Qt.AlignmentFlag.AlignRight
+            | Qt.AlignmentFlag.AlignTrailing
+            | Qt.AlignmentFlag.AlignVCenter
+        )
         lbl.setText(RESULT_FMT.format(participant.result))
         self.grid_layout.addWidget(lbl, row, col, 1, 1)
         self.participant_res_labels[participant] = lbl
