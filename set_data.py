@@ -132,3 +132,7 @@ with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
 
 if __name__ == "__main__":
     set_route_data()
+    try:
+        compute_ranks(participants_from_json())
+    except FileNotFoundError:
+        pass
