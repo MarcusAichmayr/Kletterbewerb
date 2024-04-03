@@ -73,7 +73,6 @@ def load_participants() -> list[Participant]:
 
 def compute_ranks(participants: list[Participant]) -> None:
     """Compute ranks of participants"""
-
     for participant in participants:
         participant.compute_result()
 
@@ -89,18 +88,11 @@ def compute_ranks(participants: list[Participant]) -> None:
 
 
 def save_ranks(participants: list[Participant]) -> None:
-    """save ranks of participants (sorted) in 'ergebnisse.csv'."""
-
+    """save ranks of participants (sorted) in 'ergebnisse.csv'"""
     head = ["Name", "Gruppe", "Rang"]
     savetxt(
         GENERATED_DIR + "ergebnisse.csv",
-        [head]
-        + [
-            [p.name, p.group.name, p.rank]
-            for p in sorted(
-                participants, key=lambda participant: (participant.group.id, participant.rank)
-            )
-        ],
+        [head] + [[p.name, p.group.name, p.rank] for p in sorted(participants)],
         delimiter=",",
         fmt="%s",
     )
@@ -108,9 +100,8 @@ def save_ranks(participants: list[Participant]) -> None:
 
 
 def print_ranks(participants: list[Participant]) -> None:
-    for participant in sorted(
-        participants, key=lambda participant: (participant.group.id, participant.rank)
-    ):
+    """prints ranks of participants"""
+    for participant in sorted(participants):
         print(
             f"{participant.rank:>2}",
             f"{participant.result:>6.2f}",

@@ -22,6 +22,9 @@ class Group:
     def __hash__(self) -> int:
         return hash(self.id)
 
+    def __lt__(self, other) -> bool:
+        return self.id < other.id
+
     def set_routes(self, routes: list) -> None:
         """assigns routes from a list of all routes"""
         self.routes = []
@@ -59,17 +62,22 @@ class Route:
     def __hash__(self) -> int:
         return hash(self.id)
 
+    def __lt__(self, other) -> bool:
+        return self.id < other.id
+
 
 class Participant:
-    """person who climbs routes"""
+    """person that takes part in this competition"""
 
     name: str
     group: Group
     rank: int
-    points: dict[Route: list[int]]  # Route: list of points
+    points: dict[Route : list[int]]  # Route: list of points
     result: float  # a score between 0 and 100
 
-    def __init__(self, name: str, group: Group, rank: int = 0, points: dict[Route: list[int]] = None) -> None:
+    def __init__(
+        self, name: str, group: Group, rank: int = 0, points: dict[Route : list[int]] = None
+    ) -> None:
         if not isinstance(group, Group):
             raise TypeError("'group' should be a Group object.")
         self.name = name
@@ -86,6 +94,13 @@ class Participant:
     def __repr__(self) -> str:
         return f"{self.name}({self.group.name})"
 
+    def __lt__(self, other) -> bool:
+        if self.group != other.group:
+            return self.group < other.group
+        if self.rank != other.rank:
+            return self.rank < other.rank
+        return self.name < other.name
+
     def to_dict(self) -> dict:
         """returns this participant as a dictionary"""
         return {
@@ -95,7 +110,7 @@ class Participant:
             "points": {route.id: points for route, points in self.points.items()},
         }
 
-    def insert_points(self, route: Route, points: list[Route: int]) -> None:
+    def insert_points(self, route: Route, points: list[Route:int]) -> None:
         """
         insert how many points the participant has scored for the given route
 
