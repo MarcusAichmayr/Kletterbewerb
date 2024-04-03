@@ -16,56 +16,6 @@ if not os.path.exists(GENERATED_DIR):
     os.makedirs(GENERATED_DIR)
 
 
-def compute_ranks(participants: list[Participant]) -> None:
-    """Compute ranks of participants"""
-
-    for participant in participants:
-        participant.compute_result()
-
-    participants_per_group = {}
-    for group in groups:
-        participants_per_group[group] = [p for p in participants if p.group == group]
-
-        for participant, rank in zip(
-            participants_per_group[group],
-            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
-        ):
-            participant.rank = int(rank)
-
-
-def print_ranks(participants: list[Participant]) -> None:
-    for participant in sorted(
-        participants, key=lambda participant: (participant.group.id, participant.rank)
-    ):
-        print(
-            f"{participant.rank:>2}",
-            f"{participant.result:>6.2f}",
-            ("{:<%s}" % max(len(group.name) for group in groups)).format(
-                participant.group.name
-            ),
-            participant.name,
-        )
-
-
-def save_ranks(participants: list[Participant]) -> None:
-    """save ranks of participants (sorted) in 'ergebnisse.csv'."""
-
-    head = ["Name", "Gruppe", "Rang"]
-    savetxt(
-        GENERATED_DIR + "ergebnisse.csv",
-        [head]
-        + [
-            [p.name, p.group.name, p.rank]
-            for p in sorted(
-                participants, key=lambda participant: (participant.group.id, participant.rank)
-            )
-        ],
-        delimiter=",",
-        fmt="%s",
-    )
-    print("Saved results.")
-
-
 def set_route_data() -> None:
     """save route data in 'generated' directory so that latex can generate 'routenzettel.pdf'"""
     head = ["ID", "Farbe", "Routensetzer", "Gruppen"]
@@ -121,6 +71,56 @@ def load_participants() -> list[Participant]:
             ]
 
 
+def compute_ranks(participants: list[Participant]) -> None:
+    """Compute ranks of participants"""
+
+    for participant in participants:
+        participant.compute_result()
+
+    participants_per_group = {}
+    for group in groups:
+        participants_per_group[group] = [p for p in participants if p.group == group]
+
+        for participant, rank in zip(
+            participants_per_group[group],
+            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
+        ):
+            participant.rank = int(rank)
+
+
+def save_ranks(participants: list[Participant]) -> None:
+    """save ranks of participants (sorted) in 'ergebnisse.csv'."""
+
+    head = ["Name", "Gruppe", "Rang"]
+    savetxt(
+        GENERATED_DIR + "ergebnisse.csv",
+        [head]
+        + [
+            [p.name, p.group.name, p.rank]
+            for p in sorted(
+                participants, key=lambda participant: (participant.group.id, participant.rank)
+            )
+        ],
+        delimiter=",",
+        fmt="%s",
+    )
+    print("Saved results.")
+
+
+def print_ranks(participants: list[Participant]) -> None:
+    for participant in sorted(
+        participants, key=lambda participant: (participant.group.id, participant.rank)
+    ):
+        print(
+            f"{participant.rank:>2}",
+            f"{participant.result:>6.2f}",
+            ("{:<%s}" % max(len(group.name) for group in groups)).format(
+                participant.group.name
+            ),
+            participant.name,
+        )
+
+
 with open(DATA_DIR + "gruppen.csv", "r", encoding="utf-8") as data:
     groups = [Group(int(line["ID"]), line["Bezeichnung"]) for line in csv.DictReader(data)]
 group_dict = {group.id: group for group in groups}
@@ -150,6 +150,8 @@ with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
 if __name__ == "__main__":
     set_route_data()
     try:
-        compute_ranks(participants_from_json())
+        participants = participants_from_json()
+        compute_ranks(participants)
+        save_ranks(participants)
     except FileNotFoundError:
         pass
