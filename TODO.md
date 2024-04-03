@@ -1,12 +1,5 @@
 # TODO
 
-## Punkte eintragen
-
-* Es gibt mehrere Möglichkeiten:
-  * [x] Interface machen, um Punkte einzutragen
-    * Python oder Godot
-  * In CSV-Datei eintragen und laden.
-
 ## Makefile (oder Ähnliches)
 
 * [ ] Befehle für
@@ -19,15 +12,17 @@
 
 ## Andere Features
 
-* [x] Punkte, Ergebnisse und Ränge abspeichern
-  * in csv?
-
 * [ ] Anzahl Versuche
   * pro Gruppe
   * in `gruppen.csv`
   * [ ] `laufzettel.tex` anpassen
 
 * [ ] Was ist, wenn 2 Teilnehmer den selben Namen haben?
+  * ID für Teilnehmer
 
 * [ ] Alter und Gruppe der Teilnehmer automatisch bestimmen
   * [ ] verwende Datum in `bewerb.csv`
+
+## Farben in Auswertung
+
+* andere Farben für Routen
