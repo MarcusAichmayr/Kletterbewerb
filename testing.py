@@ -24,7 +24,9 @@ routes
 save_participants(participants)
 
 # %%
-participants_from_json()
+participants = participants_from_json()
+compute_ranks(participants)
+print_ranks(participants)
 
 # %%
 from classes import Participant
