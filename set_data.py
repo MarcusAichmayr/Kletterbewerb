@@ -74,11 +74,13 @@ def set_route_data() -> None:
 
 def save_participants(participants: list[Participant]) -> None:
     """save a list of participants as json"""
-    with open("generated/teilnehmer.json", "w", encoding="utf-8") as f:
+    with open(GENERATED_DIR + "teilnehmer.json", "w", encoding="utf-8") as f:
         json.dump([p.to_dict() for p in participants], f)
 
 
-def participants_from_json(file: str = "generated/teilnehmer.json") -> list:
+def participants_from_json(file: str = None) -> list:
+    if not file:
+        file = GENERATED_DIR + "teilnehmer.json"
     with open(file) as f:
         participants = json.load(f)
     return [

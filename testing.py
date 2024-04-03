@@ -29,7 +29,7 @@ routes
 save_participants(participants)
 
 # %%
-participants_from_json("generated/teilnehmer.json")
+participants_from_json()
 
 # %%
 from classes import Participant
