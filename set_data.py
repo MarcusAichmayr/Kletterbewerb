@@ -49,6 +49,7 @@ def compute_ranks(participants: list[Participant]) -> None:
         delimiter=",",
         fmt="%s",
     )
+    print("Saved results.")
 
 
 def set_route_data() -> None:
