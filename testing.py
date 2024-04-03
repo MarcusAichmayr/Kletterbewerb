@@ -50,5 +50,6 @@ for participant in participants:
         )
 
 compute_ranks(participants)
+print_ranks(participants)
 
 # %%

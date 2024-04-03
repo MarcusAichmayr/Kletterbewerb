@@ -3,7 +3,6 @@ import json
 import os
 import warnings
 from numpy import savetxt
-from scipy.stats import rankdata
 from classes import Participant, Group, Route
 
 DATA_DIR = "data/"
@@ -72,19 +71,15 @@ def load_participants() -> list[Participant]:
 
 
 def compute_ranks(participants: list[Participant]) -> None:
-    """Compute ranks of participants"""
+    """compute ranks of participants"""
     for participant in participants:
         participant.compute_result()
 
-    participants_per_group = {}
     for group in groups:
-        participants_per_group[group] = [p for p in participants if p.group == group]
-
-        for participant, rank in zip(
-            participants_per_group[group],
-            rankdata([-p.result for p in participants_per_group[group]], method="dense"),
-        ):
-            participant.rank = int(rank)
+        participants_of_group = [p for p in participants if p.group == group]
+        results = sorted(set(p.result for p in participants_of_group), reverse=True)
+        for participant in participants_of_group:
+            participant.rank = results.index(participant.result) + 1
 
 
 def save_ranks(participants: list[Participant]) -> None:
