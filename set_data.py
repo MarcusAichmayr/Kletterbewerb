@@ -17,7 +17,8 @@ if not os.path.exists(GENERATED_DIR):
 
 
 def compute_ranks(participants: list[Participant]) -> None:
-    """Compute ranks of participants and save results (sorted) in 'generated/ergebnisse.csv'."""
+    """Compute ranks of participants"""
+
     for participant in participants:
         participant.compute_result()
 
@@ -42,10 +43,20 @@ def compute_ranks(participants: list[Participant]) -> None:
             participant.name,
         )
 
+
+def save_ranks(participants: list[Participant]) -> None:
+    """save ranks of participants (sorted) in 'ergebnisse.csv'."""
+
     head = ["Name", "Gruppe", "Rang"]
     savetxt(
         GENERATED_DIR + "ergebnisse.csv",
-        [head] + [[p.name, p.group.name, p.rank] for p in participants],
+        [head]
+        + [
+            [p.name, p.group.name, p.rank]
+            for p in sorted(
+                participants, key=lambda participant: (participant.group.id, participant.rank)
+            )
+        ],
         delimiter=",",
         fmt="%s",
     )
@@ -96,7 +107,7 @@ def participants_from_json(file: str = None) -> list:
 
 
 def load_participants() -> list[Participant]:
-    """load participants from `generated/teilnehmer.json` if possible or `data/teilnehmer.json`"""
+    """load participants from `teilnehmer.json` if possible or `data/teilnehmer.json`"""
     try:
         return participants_from_json()
     except FileNotFoundError:
