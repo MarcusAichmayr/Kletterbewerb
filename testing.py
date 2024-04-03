@@ -2,14 +2,7 @@
 """testing"""
 
 import random  # pylint: disable=import-outside-toplevel
-from set_data import (
-    participants,
-    groups,
-    routes,
-    compute_ranks,
-    save_participants,
-    participants_from_json,
-)
+from set_data import *
 
 # In[]:
 # assigns random points for participants
@@ -21,6 +14,8 @@ for participant in participants:
         )
 
 compute_ranks(participants)
+print_ranks(participants)
+save_ranks(participants)
 
 # %%
 routes

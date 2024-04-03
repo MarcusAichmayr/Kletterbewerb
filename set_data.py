@@ -32,8 +32,11 @@ def compute_ranks(participants: list[Participant]) -> None:
         ):
             participant.rank = int(rank)
 
-    participants.sort(key=lambda participant: (participant.group.id, participant.rank))
-    for participant in participants:
+
+def print_ranks(participants: list[Participant]) -> None:
+    for participant in sorted(
+        participants, key=lambda participant: (participant.group.id, participant.rank)
+    ):
         print(
             f"{participant.rank:>2}",
             f"{participant.result:>6.2f}",
