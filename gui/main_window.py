@@ -14,6 +14,7 @@ from PySide6.QtWidgets import (
 )
 
 from classes import Group, Participant
+from set_data import competition_name
 from gui.group_box_group import GroupBoxGroup
 
 
@@ -29,7 +30,7 @@ class MainWindow(QMainWindow):
         self.setupUi()
 
     def setupUi(self) -> None:
-        self.setWindowTitle("Kletterbewerb")
+        self.setWindowTitle(f"{competition_name} - Auswertung")
         if not self.objectName():
             self.setObjectName("MainWindow")
         self.resize(750, 600)

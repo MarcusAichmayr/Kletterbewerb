@@ -133,6 +133,10 @@ with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
         for line in csv.DictReader(data)
     ]
 
+with open(DATA_DIR + "bewerb.csv", "r", encoding="utf-8") as data:
+    competition_data = {key: value for key, value in csv.reader(data)}
+    competition_name = f"{competition_data['Name']} {competition_data['Jahr']}"
+
 if __name__ == "__main__":
     set_route_data()
     try:
