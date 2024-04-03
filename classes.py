@@ -40,7 +40,7 @@ class Route:
     creator: str
 
     def __init__(
-        self, route_id: int, color: str, handholds: int, groups: list, creator: str
+        self, route_id: int, color: str, handholds: int, groups: list[Group], creator: str
     ) -> None:
         if not isinstance(route_id, int):
             raise TypeError("'route_id' should be an integer.")
