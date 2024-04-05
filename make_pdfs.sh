@@ -1,6 +1,6 @@
 python set_data.py
 
-declare -a documents=("routenzettel" "laufzettel" "etiketten" "urkunden")
+declare -a documents=("routenzettel" "laufzettel" "etiketten")
 
 EXPORT_DIR=generated/documents/
 if [ ! -e "$EXPORT_DIR" ]
