@@ -4,11 +4,13 @@ from PySide6.QtWidgets import QApplication
 
 from classes import TRY_WEIGHTS
 from gui.main_window import MainWindow
-from set_data import groups, load_participants, save_participants
+from set_data import groups, load_participants, save_participants, compute_ranks, save_ranks
 
 
 def save(participants, main_win: MainWindow) -> None:
     save_participants(participants)
+    compute_ranks(participants)
+    save_ranks(participants)
     main_win.statusbar.showMessage("gespeichert", 4_000)
 
 
