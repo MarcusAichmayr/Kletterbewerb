@@ -90,6 +90,7 @@ def save_ranks(participants: list[Participant]) -> None:
         [head] + [[p.name, p.group.name, p.rank] for p in sorted(participants)],
         delimiter=",",
         fmt="%s",
+        encoding="utf-8",
     )
     print("Saved results.")
 
