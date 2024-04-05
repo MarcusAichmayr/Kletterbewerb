@@ -10,8 +10,9 @@ Um das Projekt zu verwenden, werden LaTeX und Python benötigt.
 
 ### Daten eingeben
 
-* Nenne den Ordner `data_template` auf `data` um.
-* Passe die CSV-Dateien in diesem Ordner an.
+* Kopiere den Ordner `data/template/` und nenne ihn um.
+* Erstelle die Datei `data/aktuell.txt`, die als Inhalt den Namen des Ordners haben soll.
+* Fülle die CSV-Dateien in diesem Ordner mit den Daten der Veranstaltung.
 
 ### Dokumente generieren
 
@@ -22,10 +23,10 @@ Um das Projekt zu verwenden, werden LaTeX und Python benötigt.
 
 ### Auswertung und Urkunden
 
-1. Führe `auswertung.py` aus. TODO näher erklären
+1. Führe `auswertung.py` aus.
 2. Trage die Punkte der Teilnehmer ein.
 3. Klicke auf "Speichern", um die Ränge zu berechnen und die Ergebnisse zu speichern.
-4. Erstelle die Urkunden in `latex/urkunden/` mit `pdflatex urkunden.tex`.
+4. Erstelle die Urkunden in `latex/urkunden/` mit `pdflatex urkunden.tex`. `pdflatex` muss zweimal ausgeführt werden.
 
 ## Installation
 

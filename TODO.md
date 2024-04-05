@@ -1,5 +1,14 @@
 # TODO
 
+* [ ] Der Einstieg soll erleichtert werden. Eine Datei `set_up.py` könnte einen Ordner für eine neue Veranstaltung anlegen.
+
+* [ ] `teilnehmer.csv` wird ignoriert, wenn `teilnehmer.json` existiert
+  * Wenn man Teilnehmer im csv löscht, kommt dieser trotzdem noch vor.
+  * [ ] einfacher Weg, um Teilnehmer zu löschen, nachdem json erzeugt wurde
+
+* [ ] System einbauen, um Teilnehmer aus `teilnehmer.json` zu entfernen
+  * in Auswertung?
+
 * Auswertung
   * [ ] Spalte für Ränge
   * [ ] Button, um Urkunden zu generieren
@@ -16,7 +25,14 @@
   * `make_urkunden.py`
 * [ ] unit tests
 
+* Teilnehmer sortieren
+
+* [ ] Auswertung: Wenn man in eine Zelle klickt, soll Inhalt markiert werden.
+
 ## Makefile (oder Ähnliches)
+
+* [ ] Soll alles generieren.
+  * Urkunden nur, wenn `teilnehmer.json` existiert um `ergebnisse.csv` zu generieren.
 
 * [ ] Befehle für
   * Routenzettel
