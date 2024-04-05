@@ -10,7 +10,7 @@ Um das Projekt zu verwenden, werden LaTeX und Python benötigt.
 
 ### Daten eingeben
 
-* Kopiere den Ordner `data_template` und nenne ihn auf `data` um.
+* Nenne den Ordner `data_template` auf `data` um.
 * Passe die CSV-Dateien in diesem Ordner an.
 
 ### Dokumente generieren
@@ -22,11 +22,10 @@ Um das Projekt zu verwenden, werden LaTeX und Python benötigt.
 
 ### Auswertung und Urkunden
 
-Um die Anwendung zu starten, TODO
-
-1. Starte die Anwendung TODO
+1. Führe `auswertung.py` aus. TODO näher erklären
 2. Trage die Punkte der Teilnehmer ein.
-3. Drücke entsprechende Buttons, um die Ergebnisse zu speichern und die Urkunden zu generieren.
+3. Klicke auf "Speichern", um die Ränge zu berechnen und die Ergebnisse zu speichern.
+4. Erstelle die Urkunden in `latex/urkunden/` mit `pdflatex urkunden.tex`.
 
 ## Installation
 
