@@ -1,5 +1,7 @@
 """Classes for climbing competitions"""
 
+import warnings
+
 TRY_WEIGHTS = [1, 0.9, 0.8]
 
 
@@ -123,7 +125,8 @@ class Participant:
             ValueError: if the participant has more than max points
         """
         if self.group not in route.groups:
-            raise ValueError(f"'{route}' ist nicht gedacht für '{self}'")
+            warnings.warn(f"'{route}' ist nicht gedacht für '{self}'. Punkte für diese Route werden ignoriert.")
+            return
         for value in points:
             if value > route.handholds:
                 raise ValueError(f"'{self}' kann nicht {value} Griffe bei '{route}' haben.")
