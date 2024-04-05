@@ -1,8 +1,10 @@
 import os
-from set_data import compute_ranks, participants_from_json
+from set_data import participants_from_json, compute_ranks, save_ranks
 
 try:
-    compute_ranks(participants_from_json())
+    participants = participants_from_json()
+    compute_ranks(participants)
+    save_ranks(participants)
     os.chdir("latex/urkunden")
     os.system("pdflatex urkunden.tex")
 except FileNotFoundError:
