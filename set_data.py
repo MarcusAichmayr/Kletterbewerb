@@ -1,18 +1,30 @@
 import csv
 import json
 import os
-import warnings
 from numpy import savetxt
 from classes import Participant, Group, Route
 
-DATA_DIR = "data/"
-if not os.path.exists(DATA_DIR):
-    warnings.warn("Directory 'data' not found. Using 'data_template' instead.")
-    DATA_DIR = "data_template/"
-GENERATED_DIR = "generated/"
+CURRENT_DIR_FILE = "data/aktuell.txt"
+if not os.path.exists(CURRENT_DIR_FILE):
+    with open(CURRENT_DIR_FILE, "w", encoding="utf-8") as file:
+        file.write("template")
+
+with open(CURRENT_DIR_FILE, "r", encoding="utf-8") as file:
+    DATA_DIR = f"data/{file.readlines()[0].strip()}/"
+GENERATED_DIR = DATA_DIR + "generated/"
 
 if not os.path.exists(GENERATED_DIR):
     os.makedirs(GENERATED_DIR)
+
+if not os.path.exists("latex/include/generated/"):
+    os.makedirs("latex/include/generated/")
+
+with open("latex/include/generated/data_dir.tex", "w", encoding="utf-8") as file:
+    file.write(
+        "\\newcommand{\dataDir}{../../" + DATA_DIR + "}\n"
+        + "\\newcommand{\generatedDir}{../../" + GENERATED_DIR + "}"
+    )
+    print("Generated 'data_dir.tex'.")
 
 
 def set_route_data() -> None:
