@@ -6,7 +6,10 @@
 
 \setlength\parindent{0pt}
 % \fontdimen2\font=0pt
-\setlength\lineskip{0mm}
+\setlength\lineskip{0pt} % Abstand zwischen Etiketten
+
+\pgfmathsetmacro{\width}{7}
+\pgfmathsetmacro{\height}{4.24}
 
 \newcommand{\etikett}[2]{\begin{tikzpicture}
 	\path (0, 0) rectangle (\width, \height)
@@ -27,7 +30,7 @@
 			{\includegraphics[width=.5cm]{av_edelweiss.pdf}};
 		\end{tikzpicture}
 	};
-\end{tikzpicture}}
+\end{tikzpicture}\hspace{\lineskip}}
 
 \begin{document}
 
@@ -37,22 +40,8 @@
 
 % \large
 
-\pgfmathsetmacro{\width}{7}
-\pgfmathsetmacro{\height}{4.24}
+\DTLforeach{gruppen}{\inputID=ID}{\etikett{1.4}{\inputID}}
 
-% \DTLforeach{gruppen}{\inputgruppe=Bezeichnung}
-% {
-% 	\etikett{1.4}{1}
-% 	\hspace{-8pt}
-% }
-
-\etikett{1.4}{1}
-\hspace{-5pt}
-\etikett{1.4}{2}
-\hspace{-5pt}
-\etikett{1.2}{3}
-\hspace{-5pt}
-\etikett{1.2}{4}
-
+\phantom{\etikett{1.4}{1}}\etikett{1.4}{1}\etikett{1.4}{2}\etikett{1.2}{3}\etikett{1.2}{4}
 
 \end{document}

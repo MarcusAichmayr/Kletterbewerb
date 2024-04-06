@@ -11,7 +11,7 @@
 
 \setlength\parindent{0pt}
 \fontdimen2\font=0pt
-\setlength\lineskip{4pt}
+\setlength\lineskip{0pt} % Abstand zwischen Laufzetteln
 
 \newcolumntype{x}{>{\centering\arraybackslash}p{1.2cm}}
 
@@ -28,7 +28,7 @@
 		\\
 	\end{tabular}
 }
-\newcommand{\zettel}[2]
+\newcommand{\laufzettel}[2]
 {
 	\begin{tikzpicture}
 		\node [draw, inner sep=0pt] {
@@ -67,13 +67,13 @@
 {
 	\inputname=Name,
 	\inputgruppe=Gruppe}
-{\zettel{\inputname}{\inputgruppe}}
+{\laufzettel{\inputname}{\inputgruppe}}
 
-% \zettel{}{1} % Blanko
-% \zettel{}{2} % Blanko
-% \zettel{}{2} % Blanko
-% \zettel{}{3} % Blanko
-% \zettel{}{3} % Blanko
-% \zettel{}{4} % Blanko
+% \laufzettel{}{1} % Blanko
+% \laufzettel{}{2} % Blanko
+% \laufzettel{}{2} % Blanko
+% \laufzettel{}{3} % Blanko
+% \laufzettel{}{3} % Blanko
+% \laufzettel{}{4} % Blanko
 
 \end{document}

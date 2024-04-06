@@ -11,7 +11,7 @@
 
 \setlength\parindent{0pt}
 % \fontdimen2\font=0pt
-\setlength\lineskip{5pt}
+\setlength\lineskip{0pt} % Abstand zwischen Routenzetteln
 
 \begin{document}
 
@@ -24,20 +24,19 @@
 \pgfmathsetmacro{\width}{9.5}
 \pgfmathsetmacro{\height}{13.8}
 
+\newcommand{\routenzettel}[4]{\begin{tikzpicture}
+		\draw (0, 0) rectangle node[scale=11, inner sep=0] {\Huge#1} (\width, \height);
+		\node[below] at (.5*\width, \height) {#2};
+		\node[above, align=center, font=\LARGE] (setzer) at (.5*\width, 0) {Routensetzer:\\#3};
+		\node[above=3pt of setzer, scale=1.2] {\Huge\itshape#4};
+	\end{tikzpicture}\hspace{\lineskip}}
+
 \DTLforeach{routen2}
 {
 	\inputID=ID,
 	\inputfarbe=Farbe,
 	\inputsetzer=Routensetzer,
 	\inputgruppen=Gruppen}
-{
-	\begin{tikzpicture}
-		\draw (0, 0) rectangle node[scale=11, inner sep=0] {\Huge\inputID} (\width, \height);
-		\node[below] at (.5*\width, \height) {\inputfarbe};
-		\node[above, align=center, font=\LARGE] (setzer) at (.5*\width, 0) {Routensetzer:\\\inputsetzer};
-		\node[above=3pt of setzer, scale=1.2] {\Huge\itshape\inputgruppen};
-	\end{tikzpicture}
-	\hspace{-8pt}
-}
+{\routenzettel{\inputID}{\inputfarbe}{\inputsetzer}{\inputgruppen}}
 
 \end{document}
