@@ -140,21 +140,12 @@ route_dict = {route.id: route for route in routes}
 for group in groups:
     group.set_routes(routes)
 
-with open(DATA_DIR + "teilnehmer.csv", "r", encoding="utf-8") as data:
-    participants = [
-        Participant(line["Name"], group_dict[int(line["Gruppe"])])
-        for line in csv.DictReader(data)
-    ]
-
 with open(DATA_DIR + "bewerb.csv", "r", encoding="utf-8") as data:
     competition_data = {key: value for key, value in csv.reader(data)}
     competition_name = f"{competition_data['Name']} {competition_data['Jahr']}"
 
 if __name__ == "__main__":
     set_route_data()
-    try:
-        participants = participants_from_json()
-        compute_ranks(participants)
-        save_ranks(participants)
-    except FileNotFoundError:
-        pass
+    participants = load_participants()
+    compute_ranks(participants)
+    save_ranks(participants)
