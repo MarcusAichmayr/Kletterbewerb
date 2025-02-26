@@ -21,8 +21,8 @@ if not os.path.exists("latex/include/generated/"):
 
 with open("latex/include/generated/data_dir.tex", "w", encoding="utf-8") as file:
     file.write(
-        "\\newcommand{\dataDir}{../../" + DATA_DIR + "}\n"
-        + "\\newcommand{\generatedDir}{../../" + GENERATED_DIR + "}"
+        R"\newcommand{\dataDir}{../../" + DATA_DIR + "}\n"
+        + R"\newcommand{\generatedDir}{../../" + GENERATED_DIR + "}"
     )
     print("Generated 'data_dir.tex'.")
 
