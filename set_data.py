@@ -54,7 +54,7 @@ def save_participants(participants: list[Participant]) -> None:
         json.dump([p.to_dict() for p in participants], f)
 
 
-def participants_from_json(file: str = None) -> list:
+def participants_from_json(file: str = "") -> list:
     if not file:
         file = GENERATED_DIR + "teilnehmer.json"
     with open(file) as f:
