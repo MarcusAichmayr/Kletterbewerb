@@ -78,7 +78,7 @@ class Participant:
     result: float  # a score between 0 and 100
 
     def __init__(
-        self, name: str, group: Group, rank: int = 0, points: dict[Route, list[float]] = None
+        self, name: str, group: Group, rank: int = 0, points: dict[Route, list[float]] | None = None
     ) -> None:
         if not isinstance(group, Group):
             raise TypeError("'group' should be a Group object.")
