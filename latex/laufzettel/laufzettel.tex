@@ -36,12 +36,13 @@
 				\node (Bewerb) [
 					below left,
 					align=left,
-					inner sep=4pt
+					inner sep=4pt,
+					text width=8.5cm,
 				]
 				{
-					\LARGE\DTLfetch{bewerb}{Feld}{Name}{Eintrag} \DTLfetch{bewerb}{Feld}{Datum}{Eintrag}
+					\LARGE\DTLfetch{bewerb}{Feld}{Name}{Eintrag} \DTLfetch{bewerb}{Feld}{Jahr}{Eintrag}
 					\\
-					Gruppe: \itshape\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}
+					Gruppe: {\itshape\DTLfetch{gruppen}{ID}{#2}{Bezeichnung}}
 					\\
 					Name:
 					\\[.2cm]
